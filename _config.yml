@@ -8,5 +8,21 @@ remote_theme: jekyll/minima@d4d779a
 minima:
   skin: solarized
   
-  show_excerpts: false
   date_format: "%Y-%m-%d"
+    # Социальные ссылки
+  social_links:
+    twitter: dchiper
+    github: DigitaChip
+    
+  # Настройки постов
+  post:
+    excerpt_separator: "<!--читать-->"
+  
+  # Кодировка
+  encoding: UTF-8
+  
+  # Настройки SEO
+  seo:
+    title: true
+    description: true
+    author: true
