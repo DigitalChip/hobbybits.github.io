@@ -1,5 +1,12 @@
-theme: minima  # базовая тема от GitHub
-minima:
-  skin: solarized
+author:
+  name: DigitalChip
+  email: xsidmail@domain.com
 title: "Заметки"
 description: "Короткие заметки о технологиях и IT"
+
+remote_theme: jekyll/minima@d4d779a
+minima:
+  skin: solarized
+  
+  show_excerpts: false
+  date_format: "%Y-%m-%d"
