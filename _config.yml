@@ -1,3 +1,5 @@
 theme: minima  # базовая тема от GitHub
-title: "Мой сайт"
-description: "Заметки и мысли"
+minima:
+  skin: solarized
+title: "Заметки"
+description: "Короткие заметки о технологиях и IT"
