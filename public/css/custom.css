@@ -1,0 +1,25 @@
+/* .content {
+  font-size: 16px;
+} */
+
+:root {
+    --primary-hue: 210deg;
+    --primary-saturation: 90%;
+    --primary-lightness: 60%;
+}
+
+.content code:not(.code-block code){
+  background-color: #f2f3f2;  
+  border-color: #dfdfdf;
+}
+
+.content code:not(.code-block code):where(.dark,.dark *) {
+  background-color: #232323;
+  border-color: #3a3a3a;
+}
+
+/* :root {
+  --primary-hue: 100deg;
+  --primary-saturation: 90%;
+  --primary-lightness: 50%;
+} */

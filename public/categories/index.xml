@@ -1,0 +1,19 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Короткие заметки о технологиях и IT – Categories</title>
+    <link>http://localhost:1313/categories/</link>
+    <description>Recent content in Categories on Короткие заметки о технологиях и IT</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru-ru</language>
+    <lastBuildDate>Tue, 02 Dec 2025 20:59:00 +0300</lastBuildDate>
+    
+	  <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+  </channel>
+</rss>

@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="robots" content="noindex, nofollow" />
+  <link rel="icon shortcut" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" id="favicon-svg" />
+<link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
+<link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+<link fetchpriority="low" href="/site.webmanifest" rel="manifest" />
+<title>2. Middleware и безопасность – Короткие заметки о технологиях и IT</title>
+  <meta name="description" content="Middleware и безопасность — защищаем ваши приложения" /><link rel="canonical" href="http://localhost:1313/traefik/traefik2/" itemprop="url" />
+
+<meta property="og:title" content="2. Middleware и безопасность">
+<meta
+  property="og:description"
+  content="
+    Middleware и безопасность — защищаем ваши приложения
+  ">
+<meta
+  property="og:type"
+  content="
+    article
+  ">
+<meta property="og:url" content="http://localhost:1313/traefik/traefik2/"><meta property="article:section" content="traefik">
+
+<meta
+  property="article:published_time"
+  content="2025-12-02T20:58:00+03:00">
+
+
+<meta
+  property="article:modified_time"
+  content="2025-12-02T20:58:00+03:00">
+
+
+
+  <meta itemprop="name" content="2. Middleware и безопасность">
+  <meta itemprop="description" content="Middleware и безопасность — защищаем ваши приложения">
+  <meta itemprop="datePublished" content="2025-12-02T20:58:00+03:00">
+  <meta itemprop="dateModified" content="2025-12-02T20:58:00+03:00">
+  <meta itemprop="wordCount" content="2174">
+  <meta itemprop="keywords" content="Traefik,Https,Proxy,Docker,Middlewares">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="2. Middleware и безопасность">
+  <meta name="twitter:description" content="Middleware и безопасность — защищаем ваши приложения">
+<link href="/css/compiled/main.css" rel="stylesheet" />
+    <link href="/css/variables.css" rel="stylesheet" />
+    <link href="/css/custom.css" rel="stylesheet" />
+
+  
+<script src="/js/main-head.js" integrity=""></script>
+
+  
+  
+  </head>
+<body><div class="hextra-nav-container hx:sticky hx:top-0 hx:z-20 hx:w-full hx:bg-transparent hx:print:hidden">
+  <div
+    class="hextra-nav-container-blur hx:pointer-events-none hx:absolute hx:z-[-1] hx:h-full hx:w-full hx:bg-white hx:dark:bg-dark hx:shadow-[0_2px_4px_rgba(0,0,0,.02),0_1px_0_rgba(0,0,0,.06)] hx:contrast-more:shadow-[0_0_0_1px_#000] hx:dark:shadow-[0_-1px_0_rgba(255,255,255,.1)_inset] hx:contrast-more:dark:shadow-[0_0_0_1px_#fff]"
+  ></div>
+
+  <nav class="hextra-max-navbar-width hx:mx-auto hx:flex hx:items-center hx:justify-end hx:gap-2 hx:h-16 hx:px-6">
+    <a class="hx:flex hx:items-center hx:hover:opacity-75 hx:ltr:mr-auto hx:rtl:ml-auto" href="/">
+    <img class="hx:mr-2 hx:block hx:dark:hidden" src="/img/logo.svg" alt="Logo" height="48" width="48" />
+    <img class="hx:mr-2 hx:hidden hx:dark:block" src="/img/logo-dark.svg" alt="Dark Logo" height="48" width="48" />
+    <span class="hx:mr-2 hx:font-extrabold hx:inline hx:select-none" title="Короткие заметки о технологиях и IT">Короткие заметки о технологиях и IT</span>
+</a>
+<div class="hx:relative hx:hidden hx:md:inline-block">
+  <button
+    title="Материалы"
+    data-state="closed"
+    class="hextra-nav-menu-toggle hx:cursor-pointer hx:text-sm hx:contrast-more:text-gray-700 hx:contrast-more:dark:text-gray-100 hx:relative hx:-ml-2 hx:whitespace-nowrap hx:p-2 hx:flex hx:items-center hx:gap-1 hx:text-gray-600 hx:hover:text-gray-800 hx:dark:text-gray-400 hx:dark:hover:text-gray-200"
+    type="button"
+    aria-label="Материалы"
+  ><span class="hx:text-center">Материалы</span><svg height=12 class="hx:transition-transform hx:duration-200 hx:ease-in-out" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button>
+  <ul
+    class="hextra-nav-menu-items hx:hidden hx:z-20 hx:max-h-64 hx:overflow-auto hx:rounded-md hx:ring-1 hx:ring-black/5 hx:bg-white hx:py-1 hx:text-sm hx:shadow-lg hx:dark:ring-white/20 hx:dark:bg-neutral-800"
+    style="min-width: 100px;"
+  >
+    <li class="hextra-nav-menu-item hx:flex hx:flex-col">
+      <a
+        href="/nginx"
+        
+        class="hx:text-gray-600 hx:hover:text-gray-800 hx:dark:text-gray-400 hx:dark:hover:text-gray-200 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9 hx:flex hx:items-center hx:gap-1"
+      ><span class="hx:inline-flex hx:items-center"><svg height="1em" class="hx:inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg></span>Конфигурация Nginx</a>
+    </li><li class="hextra-nav-menu-item hx:flex hx:flex-col">
+      <a
+        href="/traefik"
+        
+        class="hx:text-gray-600 hx:hover:text-gray-800 hx:dark:text-gray-400 hx:dark:hover:text-gray-200 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9 hx:flex hx:items-center hx:gap-1"
+      ><span class="hx:inline-flex hx:items-center"><svg height="1em" class="hx:inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg></span>Про Traefik 3</a>
+    </li></ul>
+</div><a
+  title=""
+  href="/blog"
+  
+  class="hx:text-sm hx:contrast-more:text-gray-700 hx:contrast-more:dark:text-gray-100 hx:relative hx:-ml-2 hx:hidden hx:whitespace-nowrap hx:p-2 hx:md:inline-flex hx:items-center hx:gap-1 hx:text-gray-600 hx:hover:text-gray-800 hx:dark:text-gray-400 hx:dark:hover:text-gray-200"
+><span class="hx:text-center">Blog</span>
+</a><a
+  title=""
+  href="/pages/about"
+  
+  class="hx:text-sm hx:contrast-more:text-gray-700 hx:contrast-more:dark:text-gray-100 hx:relative hx:-ml-2 hx:hidden hx:whitespace-nowrap hx:p-2 hx:md:inline-flex hx:items-center hx:gap-1 hx:text-gray-600 hx:hover:text-gray-800 hx:dark:text-gray-400 hx:dark:hover:text-gray-200"
+><span class="hx:text-center">About</span>
+</a><div class="hextra-search-wrapper hx:relative hx:md:w-64">
+  <div class="hx:relative hx:flex hx:items-center hx:text-gray-900 hx:contrast-more:text-gray-800 hx:dark:text-gray-300 hx:contrast-more:dark:text-gray-300">
+    <input
+      placeholder="Поиск..."
+      class="hextra-search-input hx:focus:hextra-focus hx:block hx:w-full hx:appearance-none hx:rounded-lg hx:px-3 hx:py-2 hx:transition-colors hx:text-base hx:leading-tight hx:md:text-sm hx:bg-black/[.05] hx:dark:bg-gray-50/10 hx:focus:bg-white hx:dark:focus:bg-dark hx:placeholder:text-gray-500 hx:dark:placeholder:text-gray-400 hx:contrast-more:border hx:contrast-more:border-current"
+      type="search"
+      value=""
+      spellcheck="false"
+    />
+    <kbd
+      class="hx:absolute hx:my-1.5 hx:select-none hx:ltr:right-1.5 hx:rtl:left-1.5 hx:h-5 hx:rounded-sm hx:bg-white hx:px-1.5 hx:font-mono hx:text-[10px] hx:font-medium hx:text-gray-500 hx:border hx:border-gray-200 hx:dark:border-gray-100/20 hx:dark:bg-dark/50 hx:contrast-more:border-current hx:contrast-more:text-current hx:contrast-more:dark:border-current hx:items-center hx:gap-1 hx:transition-opacity hx:pointer-events-none hx:hidden hx:sm:flex"
+    >
+      CTRL K
+    </kbd>
+  </div>
+
+  <div>
+    <ul
+      class="hextra-search-results hextra-scrollbar hx:hidden hx:border hx:border-gray-200 hx:bg-white hx:text-gray-100 hx:dark:border-neutral-800 hx:dark:bg-neutral-900 hx:absolute hx:top-full hx:z-20 hx:mt-2 hx:overflow-auto hx:overscroll-contain hx:rounded-xl hx:py-2.5 hx:shadow-xl hx:max-h-[min(calc(50vh-11rem-env(safe-area-inset-bottom)),400px)] hx:md:max-h-[min(calc(100vh-5rem-env(safe-area-inset-bottom)),400px)] hx:inset-x-0 hx:ltr:md:left-auto hx:rtl:md:right-auto hx:contrast-more:border hx:contrast-more:border-gray-900 hx:contrast-more:dark:border-gray-50 hx:w-screen hx:min-h-[100px] hx:max-w-[min(calc(100vw-2rem),calc(100%+20rem))]"
+      style="transition: max-height 0.2s ease 0s;"
+    ></ul>
+  </div>
+</div>
+
+          <a class="hx:p-2 hx:text-current" target="_blank" rel="noreferrer" href="https://github.com/DigitalChip/hobbybits.github.io/issues" title="GitHub">
+<svg height=24 fill="currentColor" viewBox="3 3 18 18">
+  <path d="M12 3C7.0275 3 3 7.12937 3 12.2276C3 16.3109 5.57625 19.7597 9.15374 20.9824C9.60374 21.0631 9.77249 20.7863 9.77249 20.5441C9.77249 20.3249 9.76125 19.5982 9.76125 18.8254C7.5 19.2522 6.915 18.2602 6.735 17.7412C6.63375 17.4759 6.19499 16.6569 5.8125 16.4378C5.4975 16.2647 5.0475 15.838 5.80124 15.8264C6.51 15.8149 7.01625 16.4954 7.18499 16.7723C7.99499 18.1679 9.28875 17.7758 9.80625 17.5335C9.885 16.9337 10.1212 16.53 10.38 16.2993C8.3775 16.0687 6.285 15.2728 6.285 11.7432C6.285 10.7397 6.63375 9.9092 7.20749 9.26326C7.1175 9.03257 6.8025 8.08674 7.2975 6.81794C7.2975 6.81794 8.05125 6.57571 9.77249 7.76377C10.4925 7.55615 11.2575 7.45234 12.0225 7.45234C12.7875 7.45234 13.5525 7.55615 14.2725 7.76377C15.9937 6.56418 16.7475 6.81794 16.7475 6.81794C17.2424 8.08674 16.9275 9.03257 16.8375 9.26326C17.4113 9.9092 17.76 10.7281 17.76 11.7432C17.76 15.2843 15.6563 16.0687 13.6537 16.2993C13.98 16.5877 14.2613 17.1414 14.2613 18.0065C14.2613 19.2407 14.25 20.2326 14.25 20.5441C14.25 20.7863 14.4188 21.0746 14.8688 20.9824C16.6554 20.364 18.2079 19.1866 19.3078 17.6162C20.4077 16.0457 20.9995 14.1611 21 12.2276C21 7.12937 16.9725 3 12 3Z"></path>
+</svg>
+
+<span class="hx:sr-only">GitHub</span>
+          </a><div class="hx:flex hx:justify-items-start hx:group" data-theme="light">
+  <button
+    title="Изменить тему"
+    data-state="closed"
+    data-location="top"
+    class="hextra-theme-toggle hx:cursor-pointer hx:rounded-md hx:text-left hx:font-medium hx:p-2 hx:grow"
+    type="button"
+    aria-label="Изменить тему"
+  >
+    <div class="hx:flex hx:items-center hx:gap-2 hx:capitalize"><svg height=24 class="hx:group-data-[theme=dark]:hidden hx:group-data-[theme=system]:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg height=24 class="hx:group-data-[theme=light]:hidden hx:group-data-[theme=system]:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+<svg height=24 class="hx:group-data-[theme=dark]:hidden hx:group-data-[theme=light]:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="currentColor">
+  <path d="M 11.996094,2 C 6.4986225,2.0192368 2.03125,6.5024993 2.03125,12 c 0,5.497501 4.4673725,9.980763 9.964844,10 H 12 12.0039 c 5.497471,-0.01924 9.964844,-4.502499 9.964844,-10 0,-5.4975007 -4.467373,-9.9807632 -9.964844,-10 H 12 Z M 12,4 c 4.417218,0.017598 7.96875,3.5822356 7.96875,8 0,4.417764 -3.551532,7.982402 -7.96875,8 z" />
+</svg>
+
+</div>
+  </button>
+  <ul
+    class="hextra-theme-toggle-options hx:hidden hx:z-20 hx:max-h-64 hx:overflow-auto hx:rounded-md hx:ring-1 hx:ring-black/5 hx:bg-white hx:py-1 hx:text-sm hx:shadow-lg hx:dark:ring-white/20 hx:dark:bg-neutral-800"
+    style="position: fixed; inset: auto auto 0px 0px; margin: 0px; min-width: 100px;"
+    data-theme="light"
+  >
+    <li class="hx:flex hx:flex-col">
+      <p
+        data-item="light"
+        class="hx:text-gray-800 hx:dark:text-gray-100 hx:hover:bg-primary-50 hx:hover:text-primary-600 hx:hover:dark:bg-primary-500/10 hx:hover:dark:text-primary-600 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9"
+      >
+        Светлая
+         <span class="hx:absolute hx:inset-y-0 hx:flex hx:items-center hx:ltr:right-3 hx:rtl:left-3 hx:group-data-[theme=dark]:hidden hx:group-data-[theme=system]:hidden"><svg height=1em width=1em xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+      </p>
+    </li>
+    <li class="hx:flex hx:flex-col">
+      <p
+        data-item="dark"
+        class="hx:text-gray-800 hx:dark:text-gray-100 hx:hover:bg-primary-50 hx:hover:text-primary-600 hx:hover:dark:bg-primary-500/10 hx:hover:dark:text-primary-600 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9"
+      >
+        Темная
+         <span class="hx:absolute hx:inset-y-0 hx:flex hx:items-center hx:ltr:right-3 hx:rtl:left-3 hx:group-data-[theme=light]:hidden hx:group-data-[theme=system]:hidden"><svg height=1em width=1em xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+      </p>
+    </li>
+    <li class="hx:flex hx:flex-col">
+      <p
+        data-item="system"
+        class="hx:text-gray-800 hx:dark:text-gray-100 hx:hover:bg-primary-50 hx:hover:text-primary-600 hx:hover:dark:bg-primary-500/10 hx:hover:dark:text-primary-600 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9"
+      >
+        System
+         <span class="hx:absolute hx:inset-y-0 hx:flex hx:items-center hx:ltr:right-3 hx:rtl:left-3 hx:group-data-[theme=dark]:hidden hx:group-data-[theme=light]:hidden"><svg height=1em width=1em xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+      </p>
+    </li>
+  </ul>
+</div><button type="button" aria-label="Menu" class="hextra-hamburger-menu hx:cursor-pointer hx:-mr-2 hx:rounded-sm hx:p-2 hx:active:bg-gray-400/20 hx:md:hidden"><svg height=24 fill="none" viewBox="0 0 24 24" stroke="currentColor"><g><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8H20"></path></g><g><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16H20"></path></g></svg></button>
+  </nav>
+</div>
+
+  <div class='hx:mx-auto hx:flex hextra-max-page-width'>
+    <aside class="hextra-sidebar-container hx:flex hx:flex-col hx:print:hidden hx:md:top-16 hx:md:shrink-0 hx:md:w-64 hx:md:self-start hx:max-md:[transform:translate3d(0,-100%,0)] hx:md:sticky">
+  
+  <div class="hx:px-4 hx:pt-4 hx:md:hidden">
+    <div class="hextra-search-wrapper hx:relative hx:md:w-64">
+  <div class="hx:relative hx:flex hx:items-center hx:text-gray-900 hx:contrast-more:text-gray-800 hx:dark:text-gray-300 hx:contrast-more:dark:text-gray-300">
+    <input
+      placeholder="Поиск..."
+      class="hextra-search-input hx:focus:hextra-focus hx:block hx:w-full hx:appearance-none hx:rounded-lg hx:px-3 hx:py-2 hx:transition-colors hx:text-base hx:leading-tight hx:md:text-sm hx:bg-black/[.05] hx:dark:bg-gray-50/10 hx:focus:bg-white hx:dark:focus:bg-dark hx:placeholder:text-gray-500 hx:dark:placeholder:text-gray-400 hx:contrast-more:border hx:contrast-more:border-current"
+      type="search"
+      value=""
+      spellcheck="false"
+    />
+    <kbd
+      class="hx:absolute hx:my-1.5 hx:select-none hx:ltr:right-1.5 hx:rtl:left-1.5 hx:h-5 hx:rounded-sm hx:bg-white hx:px-1.5 hx:font-mono hx:text-[10px] hx:font-medium hx:text-gray-500 hx:border hx:border-gray-200 hx:dark:border-gray-100/20 hx:dark:bg-dark/50 hx:contrast-more:border-current hx:contrast-more:text-current hx:contrast-more:dark:border-current hx:items-center hx:gap-1 hx:transition-opacity hx:pointer-events-none hx:hidden hx:sm:flex"
+    >
+      CTRL K
+    </kbd>
+  </div>
+
+  <div>
+    <ul
+      class="hextra-search-results hextra-scrollbar hx:hidden hx:border hx:border-gray-200 hx:bg-white hx:text-gray-100 hx:dark:border-neutral-800 hx:dark:bg-neutral-900 hx:absolute hx:top-full hx:z-20 hx:mt-2 hx:overflow-auto hx:overscroll-contain hx:rounded-xl hx:py-2.5 hx:shadow-xl hx:max-h-[min(calc(50vh-11rem-env(safe-area-inset-bottom)),400px)] hx:md:max-h-[min(calc(100vh-5rem-env(safe-area-inset-bottom)),400px)] hx:inset-x-0 hx:ltr:md:left-auto hx:rtl:md:right-auto hx:contrast-more:border hx:contrast-more:border-gray-900 hx:contrast-more:dark:border-gray-50 hx:w-screen hx:min-h-[100px] hx:max-w-[min(calc(100vw-2rem),calc(100%+20rem))]"
+      style="transition: max-height 0.2s ease 0s;"
+    ></ul>
+  </div>
+</div>
+
+  </div>
+  <div class="hextra-scrollbar hx:overflow-y-auto hx:overflow-x-hidden hx:p-4 hx:grow hx:md:h-[calc(100vh-var(--navbar-height)-var(--menu-height))]">
+    <ul class="hx:flex hx:flex-col hx:gap-1 hx:md:hidden">
+      
+      
+          <li class=""><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/blog/"
+    
+  >Blog
+        <span class="hextra-sidebar-collapsible-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="hx:h-[18px] hx:min-w-[18px] hx:rounded-xs hx:p-0.5 hx:hover:bg-gray-800/5 hx:dark:hover:bg-gray-100/5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" class="hx:origin-center hx:transition-transform hx:rtl:-rotate-180"></path></svg></span>
+    </a><div class="hx:ltr:pr-0 hx:overflow-hidden">
+        <ul class='hx:relative hx:flex hx:flex-col hx:gap-1 hx:before:absolute hx:before:inset-y-1 hx:before:w-px hx:before:bg-gray-200 hx:before:content-[""] hx:ltr:ml-3 hx:ltr:pl-3 hx:ltr:before:left-0 hx:rtl:mr-3 hx:rtl:pr-3 hx:rtl:before:right-0 hx:dark:before:bg-neutral-800'><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/blog/2025-12-06/"
+    
+  >Первая запись в блоге
+    </a>
+              
+            </li></ul>
+      </div></li>
+          <li class="open"><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/"
+    
+  >Traefik 3
+        <span class="hextra-sidebar-collapsible-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="hx:h-[18px] hx:min-w-[18px] hx:rounded-xs hx:p-0.5 hx:hover:bg-gray-800/5 hx:dark:hover:bg-gray-100/5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" class="hx:origin-center hx:transition-transform hx:rtl:-rotate-180"></path></svg></span>
+    </a><div class="hx:ltr:pr-0 hx:overflow-hidden">
+        <ul class='hx:relative hx:flex hx:flex-col hx:gap-1 hx:before:absolute hx:before:inset-y-1 hx:before:w-px hx:before:bg-gray-200 hx:before:content-[""] hx:ltr:ml-3 hx:ltr:pl-3 hx:ltr:before:left-0 hx:rtl:mr-3 hx:rtl:pr-3 hx:rtl:before:right-0 hx:dark:before:bg-neutral-800'><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/traefik1/"
+    
+  >1. Что такое Traefik
+    </a>
+              
+            </li><li class="hx:flex hx:flex-col open"><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hextra-sidebar-active-item hx:bg-primary-100 hx:font-semibold hx:text-primary-800 hx:contrast-more:border hx:contrast-more:border-primary-500 hx:dark:bg-primary-400/10 hx:dark:text-primary-600 hx:contrast-more:dark:border-primary-500"
+    href="/traefik/traefik2/"
+    
+  >2. Middleware и безопасность
+    </a>
+  
+    <ul class='hx:flex hx:flex-col hx:gap-1 hx:relative hx:before:absolute hx:before:inset-y-1 hx:before:w-px hx:before:bg-gray-200 hx:before:content-[""] hx:dark:before:bg-neutral-800 hx:ltr:pl-3 hx:ltr:before:left-0 hx:rtl:pr-3 hx:rtl:before:right-0 hx:ltr:ml-3 hx:rtl:mr-3'><li>
+              <a
+                href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-1-middleware-%d0%b4%d0%bb%d1%8f-%d0%b1%d0%b5%d0%b7%d0%be%d0%bf%d0%b0%d1%81%d0%bd%d0%be%d1%81%d1%82%d0%b8"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Часть 1. Middleware для безопасности</a>
+            </li>
+          <li>
+              <a
+                href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-2-middleware-%d0%b4%d0%bb%d1%8f-%d0%be%d0%bf%d1%82%d0%b8%d0%bc%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d0%b8"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Часть 2. Middleware для оптимизации</a>
+            </li>
+          <li>
+              <a
+                href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-3-%d0%bf%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%b9-%d0%bf%d1%80%d0%b8%d0%bc%d0%b5%d1%80--%d0%b7%d0%b0%d1%89%d0%b8%d1%89%d0%b0%d0%b5%d0%bc-wordpress"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Часть 3. Практический пример — защищаем WordPress</a>
+            </li>
+          <li>
+              <a
+                href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-4-%d0%be%d0%b1%d0%b7%d0%be%d1%80-middleware-%d0%b2-traefik--%d0%bf%d0%be%d0%bb%d0%bd%d1%8b%d0%b9-%d1%81%d0%bf%d0%b8%d1%81%d0%be%d0%ba-%d0%bf%d0%be%d0%bc%d0%be%d1%89%d0%bd%d0%b8%d0%ba%d0%be%d0%b2"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Часть 4. Обзор middleware в Traefik — полный список помощников</a>
+            </li>
+          <li>
+              <a
+                href="#%d0%b7%d0%b0%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Заключение</a>
+            </li>
+          </ul>
+  
+              
+            </li><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/traefik3/"
+    
+  >3. Lets Encrypt, SSL...
+    </a>
+              
+            </li><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/traefik4/"
+    
+  >4. Мониторинг и метрики
+    </a>
+              
+            </li></ul>
+      </div></li>
+          <li class=""><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/nginx/"
+    
+  >Nginx
+        <span class="hextra-sidebar-collapsible-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="hx:h-[18px] hx:min-w-[18px] hx:rounded-xs hx:p-0.5 hx:hover:bg-gray-800/5 hx:dark:hover:bg-gray-100/5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" class="hx:origin-center hx:transition-transform hx:rtl:-rotate-180"></path></svg></span>
+    </a><div class="hx:ltr:pr-0 hx:overflow-hidden">
+        <ul class='hx:relative hx:flex hx:flex-col hx:gap-1 hx:before:absolute hx:before:inset-y-1 hx:before:w-px hx:before:bg-gray-200 hx:before:content-[""] hx:ltr:ml-3 hx:ltr:pl-3 hx:ltr:before:left-0 hx:rtl:mr-3 hx:rtl:pr-3 hx:rtl:before:right-0 hx:dark:before:bg-neutral-800'><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/nginx/nginx1/"
+    
+  >1. Nginx - Анатомия конфигурации Nginx
+    </a>
+              
+            </li><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/nginx/nginx2/"
+    
+  >2. Location: Мастер маршрутизации запросов
+    </a>
+              
+            </li></ul>
+      </div></li>
+          <li class=""><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/pages/"
+    
+  >Pages
+        <span class="hextra-sidebar-collapsible-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="hx:h-[18px] hx:min-w-[18px] hx:rounded-xs hx:p-0.5 hx:hover:bg-gray-800/5 hx:dark:hover:bg-gray-100/5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" class="hx:origin-center hx:transition-transform hx:rtl:-rotate-180"></path></svg></span>
+    </a><div class="hx:ltr:pr-0 hx:overflow-hidden">
+        <ul class='hx:relative hx:flex hx:flex-col hx:gap-1 hx:before:absolute hx:before:inset-y-1 hx:before:w-px hx:before:bg-gray-200 hx:before:content-[""] hx:ltr:ml-3 hx:ltr:pl-3 hx:ltr:before:left-0 hx:rtl:mr-3 hx:rtl:pr-3 hx:rtl:before:right-0 hx:dark:before:bg-neutral-800'><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/pages/about/"
+    
+  >About
+    </a>
+              
+            </li></ul>
+      </div></li>
+    </ul>
+
+    <ul class="hx:flex hx:flex-col hx:gap-1 hx:max-md:hidden">
+        
+          <li class=""><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/traefik1/"
+    
+  >1. Что такое Traefik
+    </a></li>
+          <li class="open"><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hextra-sidebar-active-item hx:bg-primary-100 hx:font-semibold hx:text-primary-800 hx:contrast-more:border hx:contrast-more:border-primary-500 hx:dark:bg-primary-400/10 hx:dark:text-primary-600 hx:contrast-more:dark:border-primary-500"
+    href="/traefik/traefik2/"
+    
+  >2. Middleware и безопасность
+    </a></li>
+          <li class=""><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/traefik3/"
+    
+  >3. Lets Encrypt, SSL...
+    </a></li>
+          <li class=""><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/traefik4/"
+    
+  >4. Мониторинг и метрики
+    </a></li>
+        
+      </ul>
+    </div>
+  
+  </aside>
+    
+<nav class="hextra-toc hx:order-last hx:hidden hx:w-64 hx:shrink-0 hx:xl:block hx:print:hidden hx:px-4" aria-label="table of contents">
+    <div class="hextra-scrollbar hx:sticky hx:top-16 hx:overflow-y-auto hx:pr-4 hx:pt-6 hx:text-sm [hyphens:auto] hx:max-h-[calc(100vh-var(--navbar-height)-env(safe-area-inset-bottom))] hx:ltr:-mr-4 hx:rtl:-ml-4"><p class="hx:mb-4 hx:font-semibold hx:tracking-tight">На этой странице</p><ul>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-1-middleware-%d0%b4%d0%bb%d1%8f-%d0%b1%d0%b5%d0%b7%d0%be%d0%bf%d0%b0%d1%81%d0%bd%d0%be%d1%81%d1%82%d0%b8">Часть 1. Middleware для безопасности
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#11-%d0%b1%d0%b0%d0%b7%d0%be%d0%b2%d0%b0%d1%8f-%d0%b0%d1%83%d1%82%d0%b5%d0%bd%d1%82%d0%b8%d1%84%d0%b8%d0%ba%d0%b0%d1%86%d0%b8%d1%8f-%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0-%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba%d0%b0">1.1 Базовая аутентификация (“Проверка пропуска”)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%81%d0%be%d0%b7%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba%d0%b0">Создание “пропуска”
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d0%bd%d0%b0%d1%87%d0%b8%d0%bd%d0%b0%d0%b5%d0%bc-%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d1%83">Начинаем проверку
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#12-ip-whitelist-%d1%81%d0%bf%d0%b8%d1%81%d0%be%d0%ba-%d0%b4%d0%be%d0%b2%d0%b5%d1%80%d0%b5%d0%bd%d0%bd%d1%8b%d1%85-%d0%b3%d0%be%d1%81%d1%82%d0%b5%d0%b9">1.2 IP Whitelist (“Список доверенных гостей”)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#13-rate-limiting-%d0%be%d0%b3%d1%80%d0%b0%d0%bd%d0%b8%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-%d0%ba%d0%be%d0%bb%d0%b8%d1%87%d0%b5%d1%81%d1%82%d0%b2%d0%b0-%d0%b3%d0%be%d1%81%d1%82%d0%b5%d0%b9">1.3 Rate Limiting (“Ограничение количества гостей”)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#14-security-headers-%d0%b4%d0%be%d0%bf%d0%be%d0%bb%d0%bd%d0%b8%d1%82%d0%b5%d0%bb%d1%8c%d0%bd%d1%8b%d0%b5-%d0%b7%d0%b0%d0%b3%d0%be%d0%bb%d0%be%d0%b2%d0%ba%d0%b8-%d0%b1%d0%b5%d0%b7%d0%be%d0%bf%d0%b0%d1%81%d0%bd%d0%be%d1%81%d1%82%d0%b8">1.4 Security Headers (“Дополнительные заголовки безопасности”)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%81%d1%82%d1%80%d1%83%d0%ba%d1%82%d1%83%d1%80%d0%b0-%d0%bf%d1%80%d0%be%d0%b5%d0%ba%d1%82%d0%b0">Структура проекта
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#1-%d1%84%d0%b0%d0%b9%d0%bb-traefikyml-%d0%be%d1%81%d0%bd%d0%be%d0%b2%d0%bd%d0%b0%d1%8f-%d0%ba%d0%be%d0%bd%d1%84%d0%b8%d0%b3%d1%83%d1%80%d0%b0%d1%86%d0%b8%d1%8f">1. Файл traefik.yml (основная конфигурация)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#2-%d1%84%d0%b0%d0%b9%d0%bb-dynamicsecurity-headersyml-%d0%bd%d0%b0%d1%88%d0%b8-%d0%bf%d0%be%d0%bc%d0%be%d1%89%d0%bd%d0%b8%d0%ba%d0%b8">2. Файл dynamic/security-headers.yml (наши “помощники”)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#3-%d0%be%d0%b1%d0%bd%d0%be%d0%b2%d0%bb%d1%91%d0%bd%d0%bd%d1%8b%d0%b9-docker-composeyml">3. Обновлённый docker-compose.yml
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%81%d0%bf%d0%b8%d1%81%d0%be%d0%ba-%d0%b4%d0%be%d1%81%d1%82%d1%83%d0%bf%d0%bd%d1%8b%d1%85-%d0%bf%d0%b0%d1%80%d0%b0%d0%bc%d0%b5%d1%82%d1%80%d0%be%d0%b2-headers">Список доступных параметров headers
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0-%d1%80%d0%b0%d0%b1%d0%be%d1%82%d1%8b">Проверка работы
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-2-middleware-%d0%b4%d0%bb%d1%8f-%d0%be%d0%bf%d1%82%d0%b8%d0%bc%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d0%b8">Часть 2. Middleware для оптимизации
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#21-compress-%d1%83%d0%bf%d0%b0%d0%ba%d0%be%d0%b2%d0%ba%d0%b0-%d0%bf%d0%be%d1%81%d1%8b%d0%bb%d0%be%d0%ba">2.1 Compress (“Упаковка посылок”)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#22-retry-%d0%bf%d0%be%d0%b2%d1%82%d0%be%d1%80%d0%bd%d0%b0%d1%8f-%d0%bf%d0%be%d0%bf%d1%8b%d1%82%d0%ba%d0%b0">2.2 Retry (“Повторная попытка”)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#23-circuit-breaker-%d0%b0%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%b9-%d0%b2%d1%8b%d0%ba%d0%bb%d1%8e%d1%87%d0%b0%d1%82%d0%b5%d0%bb%d1%8c">2.3 Circuit Breaker (“Автоматический выключатель”)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-3-%d0%bf%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%b9-%d0%bf%d1%80%d0%b8%d0%bc%d0%b5%d1%80--%d0%b7%d0%b0%d1%89%d0%b8%d1%89%d0%b0%d0%b5%d0%bc-wordpress">Часть 3. Практический пример — защищаем WordPress
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-4-%d0%be%d0%b1%d0%b7%d0%be%d1%80-middleware-%d0%b2-traefik--%d0%bf%d0%be%d0%bb%d0%bd%d1%8b%d0%b9-%d1%81%d0%bf%d0%b8%d1%81%d0%be%d0%ba-%d0%bf%d0%be%d0%bc%d0%be%d1%89%d0%bd%d0%b8%d0%ba%d0%be%d0%b2">Часть 4. Обзор middleware в Traefik — полный список помощников
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d0%ba%d0%b0%d1%82%d0%b5%d0%b3%d0%be%d1%80%d0%b8%d0%b8-middleware">Категории middleware
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#middleware-%d0%b4%d0%bb%d1%8f-%d0%b1%d0%b5%d0%b7%d0%be%d0%bf%d0%b0%d1%81%d0%bd%d0%be%d1%81%d1%82%d0%b8">Middleware для безопасности
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#middleware-%d0%b4%d0%bb%d1%8f-%d0%be%d0%bf%d1%82%d0%b8%d0%bc%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d0%b8">Middleware для оптимизации
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#middleware-%d0%b4%d0%bb%d1%8f-%d0%bc%d0%be%d0%b4%d0%b8%d1%84%d0%b8%d0%ba%d0%b0%d1%86%d0%b8%d0%b8-%d0%b7%d0%b0%d0%bf%d1%80%d0%be%d1%81%d0%be%d0%b2">Middleware для модификации запросов
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#middleware-%d0%b4%d0%bb%d1%8f-%d1%83%d0%bf%d1%80%d0%b0%d0%b2%d0%bb%d0%b5%d0%bd%d0%b8%d1%8f-%d1%82%d1%80%d0%b0%d1%84%d0%b8%d0%ba%d0%be%d0%bc">Middleware для управления трафиком
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d0%bf%d1%80%d0%b8%d0%bc%d0%b5%d1%80%d1%8b-%d0%ba%d0%be%d0%bd%d1%84%d0%b8%d0%b3%d1%83%d1%80%d0%b0%d1%86%d0%b8%d0%b8-%d0%b4%d0%bb%d1%8f-%d1%80%d0%b0%d0%b7%d0%bd%d1%8b%d1%85-middleware">Примеры конфигурации для разных middleware
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#digest-auth-%d0%b2-dynamicmiddlewareyml">Digest Auth (в dynamic/middleware.yml)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#forward-auth-%d0%b2%d0%bd%d0%b5%d1%88%d0%bd%d1%8f%d1%8f-%d0%b0%d1%83%d1%82%d0%b5%d0%bd%d1%82%d0%b8%d1%84%d0%b8%d0%ba%d0%b0%d1%86%d0%b8%d1%8f">Forward Auth (внешняя аутентификация)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#strip-prefix-%d1%83%d0%b4%d0%b0%d0%bb%d0%b5%d0%bd%d0%b8%d0%b5-%d0%bf%d1%80%d0%b5%d1%84%d0%b8%d0%ba%d1%81%d0%b0-url">Strip Prefix (удаление префикса URL)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#replace-path-%d0%b7%d0%b0%d0%bc%d0%b5%d0%bd%d0%b0-%d0%bf%d1%83%d1%82%d0%b8">Replace Path (замена пути)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-8 hx:rtl:pr-8 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#error-pages-%d0%ba%d0%b0%d1%81%d1%82%d0%be%d0%bc%d0%bd%d1%8b%d0%b5-%d1%81%d1%82%d1%80%d0%b0%d0%bd%d0%b8%d1%86%d1%8b-%d0%be%d1%88%d0%b8%d0%b1%d0%be%d0%ba">Error Pages (кастомные страницы ошибок)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d0%b7%d0%b0%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5">Заключение
+        </a>
+      </li></ul>
+      <div class="hx:mt-8 hx:border-t hx:bg-white hx:pt-8 hx:shadow-[0_-12px_16px_white] hx:dark:bg-dark hx:dark:shadow-[0_-12px_16px_#111] hx:sticky hx:bottom-0 hx:flex hx:flex-col hx:items-start hx:gap-2 hx:pb-8 hx:border-gray-200 hx:dark:border-neutral-800 hx:contrast-more:border-t hx:contrast-more:border-neutral-400 hx:contrast-more:shadow-none hx:contrast-more:dark:border-neutral-400"><div class="hx:flex hx:items-start hx:gap-x-2 hx:font-medium hx:text-xs">
+            <div class="hx:text-gray-500 hx:dark:text-gray-400 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50">Теги</div>
+            <div class="hx:flex hx:flex-wrap hx:gap-y-1">
+              <a class="hx:inline-block hx:whitespace-nowrap hx:mr-2 hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-100 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50" href="/tags/traefik/">#traefik</a><a class="hx:inline-block hx:whitespace-nowrap hx:mr-2 hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-100 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50" href="/tags/https/">#https</a><a class="hx:inline-block hx:whitespace-nowrap hx:mr-2 hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-100 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50" href="/tags/proxy/">#proxy</a><a class="hx:inline-block hx:whitespace-nowrap hx:mr-2 hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-100 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50" href="/tags/docker/">#docker</a><a class="hx:inline-block hx:whitespace-nowrap hx:mr-2 hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-100 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50" href="/tags/middlewares/">#middlewares</a>
+            </div>
+          </div>
+        <button aria-hidden="true" id="backToTop" onClick="scrollUp();" class="hx:cursor-pointer hx:transition-all hx:duration-75 hx:opacity-0 hx:text-xs hx:font-medium hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-100 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50">
+          <span>Прокрутить к началу</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hx:inline hx:ltr:ml-1 hx:rtl:mr-1 hx:h-3.5 hx:w-3.5 hx:rounded-full hx:border hx:border-gray-500 hx:hover:border-gray-900 hx:dark:border-gray-400 hx:dark:hover:border-gray-100 hx:contrast-more:border-gray-800 hx:contrast-more:dark:border-gray-50">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+
+    <article class="hx:w-full hx:break-words hx:flex hx:min-h-[calc(100vh-var(--navbar-height))] hx:min-w-0 hx:justify-center hx:pb-8 hx:pr-[calc(env(safe-area-inset-right)-1.5rem)]">
+      <main class="hx:w-full hx:min-w-0 hx:max-w-6xl hx:px-6 hx:pt-4 hx:md:px-12">
+        <div class="hx:mt-1.5 hx:flex hx:items-center hx:gap-1 hx:overflow-hidden hx:text-sm hx:text-gray-500 hx:dark:text-gray-400 hx:contrast-more:text-current">
+        <div class="hx:whitespace-nowrap hx:transition-colors hx:min-w-[24px] hx:overflow-hidden hx:text-ellipsis hx:hover:text-gray-900 hx:dark:hover:text-gray-100">
+          <a href="/traefik/">Traefik 3</a>
+        </div><svg class="hx:w-3.5 hx:shrink-0 hx:rtl:-rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg><div class="hx:whitespace-nowrap hx:transition-colors hx:font-medium hx:text-gray-700 hx:contrast-more:font-bold hx:contrast-more:text-current hx:dark:text-gray-100 hx:contrast-more:dark:text-current">2. Middleware и безопасность</div>
+  </div>
+
+        <div class="content">
+          
+          <h1>Middleware и безопасность — защищаем ваши приложения</h1><p>В этой статье продолжим разбирать работу реверс-прокси сервера Traefik 3 и перейдем к теме Middleware.</p>
+<p>Вспомним нашу аналогию: Traefik — это <a href="/traefik/traefik1/#%d0%b2%d0%b2%d0%b5%d0%b4%d0%b5%d0%bd%d0%b8%d0%b5-%d0%b4%d0%bb%d1%8f-%d0%b1%d1%83%d0%b4%d1%83%d1%89%d0%b8%d1%85-%d0%b8%d0%bd%d0%b6%d0%b5%d0%bd%d0%b5%d1%80%d0%be%d0%b2">профессиональный швейцар для вашего Docker-окружения</a>. Он встречает всех входящих &ldquo;гостей&rdquo; (запросы) и знает, в какой &ldquo;офис&rdquo; (контейнер) их проводить. Основам работы этого швейцара мы научились в <a href="/traefik/traefik1/">первой статье</a>.</p>
+<p>Но что, если к некоторым гостям нужен особый подход? У одних — нужно проверить пропуск, другим — ограничить скорость входа, третьим — выдать защитный шлем. Вот именно этим и занимаются Middleware - помощники нашего швейцара.</p>
+<p>Middleware — это дополнительные модули, которые обрабатывают запрос по пути от клиента к вашему приложению. Они не знают о бизнес-логике вашего сервиса, их задача — выполнить чётко поставленную техническую задачу: проверить, добавить, изменить или ограничить.</p>
+<p>В этой статье мы научим нашего швейцара работать с этими помощниками, чтобы сделать ваши приложения не только функциональными, но и безопасными.</p>
+<h2>Часть 1. Middleware для безопасности<span class="hx:absolute hx:-mt-20" id="часть-1-middleware-для-безопасности"></span>
+    <a href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-1-middleware-%d0%b4%d0%bb%d1%8f-%d0%b1%d0%b5%d0%b7%d0%be%d0%bf%d0%b0%d1%81%d0%bd%d0%be%d1%81%d1%82%d0%b8" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><h3>1.1 Базовая аутентификация (&ldquo;Проверка пропуска&rdquo;)<span class="hx:absolute hx:-mt-20" id="11-базовая-аутентификация-проверка-пропуска"></span>
+    <a href="#11-%d0%b1%d0%b0%d0%b7%d0%be%d0%b2%d0%b0%d1%8f-%d0%b0%d1%83%d1%82%d0%b5%d0%bd%d1%82%d0%b8%d1%84%d0%b8%d0%ba%d0%b0%d1%86%d0%b8%d1%8f-%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0-%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba%d0%b0" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Представьте, что у вас есть какой-то конфиденциальный проект. Вы не пускаете туда всех подряд, а просите гостей показать пропуск (логин и пароль) у входа. Middleware <code>basicAuth</code> делает то же самое.</p>
+<h4>Создание &ldquo;пропуска&rdquo;<span class="hx:absolute hx:-mt-20" id="создание-пропуска"></span>
+    <a href="#%d1%81%d0%be%d0%b7%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba%d0%b0" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><p>Сначала сгенерируем пару логин-пароль. В терминале выполните:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>echo <span style="color:#66d9ef">$(</span>htpasswd -nbB myuser mypassword<span style="color:#66d9ef">)</span> | sed -e s/<span style="color:#ae81ff">\\</span>$/<span style="color:#ae81ff">\\</span>$<span style="color:#ae81ff">\\</span>$/g</span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Вы получите строку вида <code>myuser:$$2y$$05$$9b67V9yuHMbBhrF7H8fqYuq0n6aXl.WH3lGqGrLWj6ikY7c4s44La</code>. Это зашифрованный пароль. Сохраните его.</p>
+<blockquote>
+  <p><strong>Примечание</strong>
+Если на вашей системе нет утилиты htpasswd, то нужно установить apache2-utils</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt-get install apache2-utils</span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+
+</blockquote>
+<h4>Начинаем проверку<span class="hx:absolute hx:-mt-20" id="начинаем-проверку"></span>
+    <a href="#%d0%bd%d0%b0%d1%87%d0%b8%d0%bd%d0%b0%d0%b5%d0%bc-%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d1%83" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><p>Вот готовый пример <code>docker-compose.yml</code> с включением мидлвара <code>basicAuth</code>:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">traefik</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">traefik:3.6</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">container_name</span>: <span style="color:#ae81ff">traefik</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># &#34;Открываем дверь&#34; для входящего HTTP-трафика</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;80:80&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Дверь для Dashboard (обычно не открывают наружу, но это для тестирования)</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;8080:8080&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Даем доступ к Docker-сокету, чтобы Traefik мог &#34;видеть&#34; другие контейнеры</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">/var/run/docker.sock:/var/run/docker.sock</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Монтируем файл статической конфигурации</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">./traefik.yml:/etc/traefik/traefik.yml</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">web</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">whoami</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">traefik/whoami</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.enable=true&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Создаем роутер для сервиса whoami на entrypoint `web`</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.whoami.rule=Host(`whoami.localhost`)&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.whoami.entrypoints=web&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Создаем Middleware &#34;проверка пропуска&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.middlewares.my-auth.basicauth.users=myuser:$$2y$$05$$9b67V9yuHMbBhrF7H8fqYuq0n6aXl.WH3lGqGrLWj6ikY7c4s44La&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Связываем этот Middleware с нашим роутером</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.whoami.middlewares=my-auth&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">web</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">web</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">web</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Теперь по адресу <code>http://whoami.localhost</code> вас встретит окно авторизации. Без правильного логина и пароля приложение недоступно.</p>
+<p><img src="/img/traefik/basicAuth.png" alt="BasicAuth"  loading="lazy" /></p>
+<p>B заметье, что проверкой пропусков (авторизацией) занимается именно помощник швейцара (мидлвар), а не наше приложение.</p>
+<h3>1.2 IP Whitelist (&ldquo;Список доверенных гостей&rdquo;)<span class="hx:absolute hx:-mt-20" id="12-ip-whitelist-список-доверенных-гостей"></span>
+    <a href="#12-ip-whitelist-%d1%81%d0%bf%d0%b8%d1%81%d0%be%d0%ba-%d0%b4%d0%be%d0%b2%d0%b5%d1%80%d0%b5%d0%bd%d0%bd%d1%8b%d1%85-%d0%b3%d0%be%d1%81%d1%82%d0%b5%d0%b9" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Это ваш личный список &ldquo;VIP-персон&rdquo;. Вход разрешён только с IP-адресов, внесённых в этот список. Всех остальных швейцар будет вежливо, но твёрдо разворачивать.</p>
+<p>Пример для локальной сети и конкретных IP:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># Фрагмент docker-compose для сервиса</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.enable=true&#34;</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-secure-service.rule=Host(`admin.localhost`)&#34;</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-secure-service.entrypoints=web&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Создаем Middleware &#34;белый список&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Разрешаем только локальные адреса (192.168.1.0/24) и один конкретный внешний IP</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.middlewares.my-whitelist.ipallowlist.sourcerange=192.168.1.0/24, 203.0.113.45&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Применяем middleware к роутеру</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-secure-service.middlewares=my-whitelist&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Если ваш IP не из указанный диапазонов, то получаем, сответственно:</p>
+<p><img src="/img/traefik/whitelist.png" alt="IP Whitelist"  loading="lazy" /></p>
+<div class="hx:overflow-x-auto hx:mt-6 hx:flex hx:flex-col hx:rounded-lg hx:border hx:py-4 hx:px-4 hx:border-gray-200 hx:contrast-more:border-current hx:contrast-more:dark:border-current hx:border-amber-200 hx:bg-amber-100 hx:text-amber-900 hx:dark:border-amber-200/30 hx:dark:bg-amber-900/30 hx:dark:text-amber-200">
+  <p class="hx:flex hx:items-center hx:font-medium"><svg height=16px class="hx:inline-block hx:align-middle hx:mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><strong>Предупреждение о безопасности</strong></p>
+
+  <div class="hx:w-full hx:min-w-0 hx:leading-7">
+    <div class="hx:mt-6 hx:leading-7 hx:first:mt-0"><p>Не используйте этот метод как единственную защиту для действительно критичных систем, так как IP-адрес можно подделать (спуфить).</p></div>
+  </div>
+</div>
+<p>Внимательно отнеситесь к вышесказанному!</p>
+<h3>1.3 Rate Limiting (&ldquo;Ограничение количества гостей&rdquo;)<span class="hx:absolute hx:-mt-20" id="13-rate-limiting-ограничение-количества-гостей"></span>
+    <a href="#13-rate-limiting-%d0%be%d0%b3%d1%80%d0%b0%d0%bd%d0%b8%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-%d0%ba%d0%be%d0%bb%d0%b8%d1%87%d0%b5%d1%81%d1%82%d0%b2%d0%b0-%d0%b3%d0%be%d1%81%d1%82%d0%b5%d0%b9" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Чтобы один какой-нидудь чересчур настойчивый гость не создавал толкучку и не мешал остальным, этот помощник швейцара считает, сколько запросов пришло с одного адреса. Если их больше допустимого — просит подождать.</p>
+<p>Пример для защиты API:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.enable=true&#34;</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-api.rule=Host(`api.localhost`) &amp;&amp; PathPrefix(`/api/`)&#34;</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-api.entrypoints=web&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Создаем Middleware &#34;ограничитель по rate&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 100 запросов в среднем за 5 минут, &#34;всплески&#34; до 20 запросов за 10 секунд </span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.middlewares.my-ratelimit.ratelimit.average=100&#34;</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.middlewares.my-ratelimit.ratelimit.period=5m&#34;</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.middlewares.my-ratelimit.ratelimit.burst=20&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-api.middlewares=my-ratelimit&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Эти ограничения - для примера, это очень маленькие ограничения. В реальности - они намного больше.</p>
+<h3>1.4 Security Headers (&ldquo;Дополнительные заголовки безопасности&rdquo;)<span class="hx:absolute hx:-mt-20" id="14-security-headers-дополнительные-заголовки-безопасности"></span>
+    <a href="#14-security-headers-%d0%b4%d0%be%d0%bf%d0%be%d0%bb%d0%bd%d0%b8%d1%82%d0%b5%d0%bb%d1%8c%d0%bd%d1%8b%d0%b5-%d0%b7%d0%b0%d0%b3%d0%be%d0%bb%d0%be%d0%b2%d0%ba%d0%b8-%d0%b1%d0%b5%d0%b7%d0%be%d0%bf%d0%b0%d1%81%d0%bd%d0%be%d1%81%d1%82%d0%b8" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Когда наш швейцар провожает гостя к нужному офису, он даёт ему набор важных инструкций для браузера: &ldquo;используй только защищённое соединение&rdquo;, &ldquo;не открывайся в чужом фрейме&rdquo;, &ldquo;не меняй тип содержимого&rdquo;. В мире веб-приложений эти инструкции называются Security Headers.</p>
+<p>Полные определения middleware лучше выносить в отдельный YAML-файл, а в labels только ссылаться на него. Поэтому для сложных настроек безопасности в Traefik 3+ мы используем динамическую YAML-конфигурацию. Это как дать швейцару подробную инструкцию перед началом рабочего дня.</p>
+<h4>Структура проекта<span class="hx:absolute hx:-mt-20" id="структура-проекта"></span>
+    <a href="#%d1%81%d1%82%d1%80%d1%83%d0%ba%d1%82%d1%83%d1%80%d0%b0-%d0%bf%d1%80%d0%be%d0%b5%d0%ba%d1%82%d0%b0" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><p>Создайте в вашем проекте следующую структуру файлов:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>traefik-project/
+</span></span><span style="display:flex;"><span>├── docker-compose.yml
+</span></span><span style="display:flex;"><span>├── traefik.yml          # Статическая конфигурация Traefik
+</span></span><span style="display:flex;"><span>└── dynamic/
+</span></span><span style="display:flex;"><span>    └── security-headers.yml   # Динамическая конфигурация middleware</span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Теперь отредактируйте соответсвующие файлы.</p>
+<h4>1. Файл traefik.yml (основная конфигурация)<span class="hx:absolute hx:-mt-20" id="1-файл-traefikyml-основная-конфигурация"></span>
+    <a href="#1-%d1%84%d0%b0%d0%b9%d0%bb-traefikyml-%d0%be%d1%81%d0%bd%d0%be%d0%b2%d0%bd%d0%b0%d1%8f-%d0%ba%d0%be%d0%bd%d1%84%d0%b8%d0%b3%d1%83%d1%80%d0%b0%d1%86%d0%b8%d1%8f" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e">#traefik.yml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">api</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">dashboard</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">debug</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">entryPoints</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">web</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">address</span>: <span style="color:#e6db74">&#34;:80&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">providers</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">docker</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">endpoint</span>: <span style="color:#e6db74">&#34;unix:///var/run/docker.sock&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">exposedByDefault</span>: <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">network</span>: <span style="color:#ae81ff">web</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">file</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">directory</span>: <span style="color:#e6db74">&#34;/etc/traefik/dynamic&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">watch</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">log</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">level</span>: <span style="color:#ae81ff">INFO</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<h4>2. Файл dynamic/security-headers.yml (наши &ldquo;помощники&rdquo;)<span class="hx:absolute hx:-mt-20" id="2-файл-dynamicsecurity-headersyml-наши-помощники"></span>
+    <a href="#2-%d1%84%d0%b0%d0%b9%d0%bb-dynamicsecurity-headersyml-%d0%bd%d0%b0%d1%88%d0%b8-%d0%bf%d0%be%d0%bc%d0%be%d1%89%d0%bd%d0%b8%d0%ba%d0%b8" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><p>Здесь мы определяем весь набор необходимых нам заголовков. Ниже приведен список заголовков для примера. Весь смысл сего действа, показать, что мы заранее определяем весь набор нужных нам заголовков в миделваре в отдельном файле, а потом в описании сервисов в <code>docker-compose.yml</code> в разделе <code>labels</code> мы просто применяем этот мидлвар.</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e">#docker-compose.yml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">http</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">middlewares</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">security-headers</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">headers</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">sslRedirect</span>: <span style="color:#66d9ef">true</span>           <span style="color:#75715e"># Автоматическое перенаправление на HTTPS</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">stsSeconds: 31536000        # HSTS</span>: <span style="color:#ae81ff">год использовать только HTTPS</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">stsIncludeSubdomains</span>: <span style="color:#66d9ef">true</span>  <span style="color:#75715e"># Правило для всех поддоменов</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">stsPreload</span>: <span style="color:#66d9ef">true</span>            <span style="color:#75715e"># Разрешить включение в предзагрузку браузеров</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">forceSTSHeader</span>: <span style="color:#66d9ef">true</span>        <span style="color:#75715e"># Принудительно добавлять HSTS заголовок</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">customRequestHeaders</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">X-Frame-Options</span>: <span style="color:#e6db74">&#34;SAMEORIGIN&#34;</span>        <span style="color:#75715e"># Запретить встраивание в чужой &lt;iframe&gt;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">X-Content-Type-Options</span>: <span style="color:#e6db74">&#34;nosniff&#34;</span>    <span style="color:#75715e"># Запретить браузеру угадывать тип контента</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">customResponseHeaders</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">X-Permitted-Cross-Domain-Policies</span>: <span style="color:#e6db74">&#34;none&#34;</span>  <span style="color:#75715e"># Блокировать кросс-доменные политики</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">Referrer-Policy</span>: <span style="color:#e6db74">&#34;strict-origin-when-cross-origin&#34;</span> <span style="color:#75715e"># Контроль передачи referrer</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">strict-csp</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">headers</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">contentSecurityPolicy</span>: <span style="color:#e6db74">&#34;default-src &#39;self&#39;; script-src &#39;self&#39; &#39;unsafe-inline&#39;; style-src &#39;self&#39; &#39;unsafe-inline&#39;&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<h4>3. Обновлённый docker-compose.yml<span class="hx:absolute hx:-mt-20" id="3-обновлённый-docker-composeyml"></span>
+    <a href="#3-%d0%be%d0%b1%d0%bd%d0%be%d0%b2%d0%bb%d1%91%d0%bd%d0%bd%d1%8b%d0%b9-docker-composeyml" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><p>Здесь мы не описываем нужные нам заголовки в <code>labels</code> сервиса, а применяем заранее подготовленный и динамически подключенный набор.</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">traefik</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">traefik:latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">command</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;--configfile=/etc/traefik/traefik.yml&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;80:80&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;8080:8080&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">/var/run/docker.sock:/var/run/docker.sock</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">./traefik.yml:/etc/traefik/traefik.yml:ro</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">./dynamic:/etc/traefik/dynamic:ro</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">web</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">secure-app</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">traefik/whoami</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.enable=true&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.secure-app.rule=Host(`secure.localhost`)&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.secure-app.entrypoints=web&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Подключаем middleware из файловой конфигурации</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.secure-app.middlewares=security-headers@file&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">web</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">web</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">web</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Суффикс <code>@file</code> при подключении мидлвара можно не ипользовать, если нет конфликта имен. Т.е., если вы определили мидлвар <code>security-headers</code> в секции <code>labels</code> какого-либо сервиса, и также применяется динамическое подключение мидлвара <code>security-headers</code> из приведенного выше файла, то тогда нужно указывать, какой именно мидлвар мы подключаем.</p>
+<p>Что делают эти заголовки:</p>
+<ul>
+<li><code>HSTS (Strict-Transport-Security):</code> - Приказывает браузеру всегда использовать HTTPS</li>
+<li><code>X-Frame-Options:</code> - Защищает от атак &ldquo;clickjacking&rdquo; через iframe</li>
+<li><code>X-Content-Type-Options:</code> - Предотвращает MIME-sniffing</li>
+<li><code>CSP (Content Security Policy):</code> - Контролирует, откуда можно загружать ресурсы</li>
+</ul>
+<h4>Список доступных параметров headers<span class="hx:absolute hx:-mt-20" id="список-доступных-параметров-headers"></span>
+    <a href="#%d1%81%d0%bf%d0%b8%d1%81%d0%be%d0%ba-%d0%b4%d0%be%d1%81%d1%82%d1%83%d0%bf%d0%bd%d1%8b%d1%85-%d0%bf%d0%b0%d1%80%d0%b0%d0%bc%d0%b5%d1%82%d1%80%d0%be%d0%b2-headers" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><p>Traefik 3 поддерживает конкретный набор полей в <code>http.middlewares.&lt;name&gt;.headers</code> для безопасности — полный список из официальной документации.</p>
+<p>Список всех доступных параметров headers:</p>
+<ul>
+<li><code>stsSeconds:</code> - число секунд для HSTS (например, 31536000) — только в YAML!</li>
+<li><code>stsIncludeSubdomains:</code> true/false — поддомены в HSTS</li>
+<li><code>stsPreload:</code> - true/false — предзагрузка HSTS в браузеры</li>
+<li><code>frameDeny:</code> -  true/false — запрет всех iframe ( вместо него лучше используйте customFrameOptionsValue)</li>
+<li><code>customFrameOptionsValue:</code> - &ldquo;SAMEORIGIN&rdquo; | &ldquo;DENY&rdquo; — настройка X-Frame-Options</li>
+<li><code>contentTypeNosniff:</code> - true/false — X-Content-Type-Options: nosniff</li>
+<li><code>browserXssFilter:</code> - true/false — X-XSS-Protection</li>
+<li><code>forceSTSHeader:</code> - true/false — Strict-Transport-Security</li>
+<li><code>sslRedirect:</code> -  true/false — редирект на HTTPS (устарело, используйте middleware RedirectScheme)</li>
+<li><code>referrerPolicy:</code> - &ldquo;no-referrer&rdquo; | &ldquo;no-referrer-when-downgrade&rdquo; и др. — Referrer-Policy</li>
+</ul>
+<p>Дополнительно: <code>allowedHosts</code> (список доменов), <code>hostsProxyHeaders</code> (X-Forwarded-*), <code>customRequestHeaders/customResponseHeaders</code> для произвольных заголовков.​</p>
+<p>Подробнее можно ознакомиться в официально документации Traefik.</p>
+<h4>Проверка работы<span class="hx:absolute hx:-mt-20" id="проверка-работы"></span>
+    <a href="#%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0-%d1%80%d0%b0%d0%b1%d0%be%d1%82%d1%8b" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><p>После запуска выполните в терминале:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -I http://secure.localhost</span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Вы увидите все настроенные заголовки безопасности в ответе сервера.</p>
+<p><img src="/img/traefik/headers.png" alt="Headers"  loading="lazy" /></p>
+<p>Такой подход позволяет централизованно управлять настройками безопасности и легко применять их к нескольким сервисам одновременно.</p>
+<h2>Часть 2. Middleware для оптимизации<span class="hx:absolute hx:-mt-20" id="часть-2-middleware-для-оптимизации"></span>
+    <a href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-2-middleware-%d0%b4%d0%bb%d1%8f-%d0%be%d0%bf%d1%82%d0%b8%d0%bc%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d0%b8" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><h3>2.1 Compress (&ldquo;Упаковка посылок&rdquo;)<span class="hx:absolute hx:-mt-20" id="21-compress-упаковка-посылок"></span>
+    <a href="#21-compress-%d1%83%d0%bf%d0%b0%d0%ba%d0%be%d0%b2%d0%ba%d0%b0-%d0%bf%d0%be%d1%81%d1%8b%d0%bb%d0%be%d0%ba" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Швейцар перед отправкой упаковывает большие и тяжёлые посылки (например, HTML, CSS, JS) в компактные архивы. Это ускоряет их доставку и экономит трафик.</p>
+<p>Настройка сжатия:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.enable=true&#34;</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-webapp.rule=Host(`webapp.localhost`)&#34;</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-webapp.entrypoints=web&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Включаем Middleware сжатия</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.middlewares.my-compress.compress=true&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-webapp.middlewares=my-compress&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<h3>2.2 Retry (&ldquo;Повторная попытка&rdquo;)<span class="hx:absolute hx:-mt-20" id="22-retry-повторная-попытка"></span>
+    <a href="#22-retry-%d0%bf%d0%be%d0%b2%d1%82%d0%be%d1%80%d0%bd%d0%b0%d1%8f-%d0%bf%d0%be%d0%bf%d1%8b%d1%82%d0%ba%d0%b0" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Если при попытке отвести гостя в офис, тот временно закрыт (сервис упал), швейцар не станет сразу говорить &ldquo;не могу&rdquo;, а попробует провести его через 5 секунд. И так несколько раз.</p>
+<p>Настройка повторных попыток:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.enable=true&#34;</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-unstable-service.rule=Host(`service.localhost`)&#34;</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-unstable-service.entrypoints=web&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Настраиваем Middleware &#34;повторитель&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 5 попыток с интервалом в 500 миллисекунд</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.middlewares.my-retry.retry.attempts=5&#34;</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.middlewares.my-retry.retry.initialinterval=500ms&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-unstable-service.middlewares=my-retry&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<h3>2.3 Circuit Breaker (&ldquo;Автоматический выключатель&rdquo;)<span class="hx:absolute hx:-mt-20" id="23-circuit-breaker-автоматический-выключатель"></span>
+    <a href="#23-circuit-breaker-%d0%b0%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%b9-%d0%b2%d1%8b%d0%ba%d0%bb%d1%8e%d1%87%d0%b0%d1%82%d0%b5%d0%bb%d1%8c" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Если офис постоянно закрывается, швейцар перестаёт пытаться туда водить гостей, чтобы не тратить время и дать сервису &ldquo;прийти в себя&rdquo;. Через некоторое время он осторожно попробует снова.</p>
+<p>Настройка автоматического выключателя:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.enable=true&#34;</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-fragile-service.rule=Host(`fragile.localhost`)&#34;</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-fragile-service.entrypoints=web&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Настраиваем Middleware &#34;автоматический выключатель&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Срабатывает, если &gt; 50% запросов за 10 секунд завершаются ошибкой</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.middlewares.my-circuitbreaker.circuitbreaker.expression=ResponseCodeRatio(500, 600) &gt; 0.50&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#34;traefik.http.routers.my-fragile-service.middlewares=my-circuitbreaker&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<h2>Часть 3. Практический пример — защищаем WordPress<span class="hx:absolute hx:-mt-20" id="часть-3-практический-пример--защищаем-wordpress"></span>
+    <a href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-3-%d0%bf%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%b9-%d0%bf%d1%80%d0%b8%d0%bc%d0%b5%d1%80--%d0%b7%d0%b0%d1%89%d0%b8%d1%89%d0%b0%d0%b5%d0%bc-wordpress" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Давайте соберём полученные знания вместе и защитим какой-нибудь сервис, к примеру - типичный блог на WordPress.</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">traefik</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">traefik:latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">container_name</span>: <span style="color:#ae81ff">traefik</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># &#34;Открываем дверь&#34; для входящего HTTP-трафика</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;80:80&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Даем доступ к Docker-сокету, чтобы Traefik мог &#34;видеть&#34; другие контейнеры</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">/var/run/docker.sock:/var/run/docker.sock</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Монтируем файл статической конфигурации</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">./traefik.yml:/etc/traefik/traefik.yml</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">web</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">wordpress</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">wordpress:latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">WORDPRESS_DB_HOST</span>: <span style="color:#ae81ff">db</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">WORDPRESS_DB_USER</span>: <span style="color:#ae81ff">exampleuser</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">WORDPRESS_DB_PASSWORD</span>: <span style="color:#ae81ff">examplepass</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">WORDPRESS_DB_NAME</span>: <span style="color:#ae81ff">exampledb</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.enable=true&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Роутер для основного сайта</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.wp-site.rule=Host(`wp.localhost`)&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.wp-site.entrypoints=web&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Роутер для панели администратора (админку защищаем сильнее)</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.wp-admin.rule=Host(`wp.localhost`) &amp;&amp; PathPrefix(`/wp-admin`)&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.wp-admin.entrypoints=web&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Middleware: Сжатие (для всего сайта)</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.middlewares.compress.compress=true&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Middleware: Базовые заголовки безопасности (для всего сайта)</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Здесь заголовки безопасности прописаны для примера! Этот мидлвар лучше выносить в файл </span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># динамичской конфигурации! Смотри пункт 1.4 или официальную документацию.</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.middlewares.security-headers.headers.forceSTSHeader=true&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.middlewares.security-headers.headers.stsseconds=31536000&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Middleware: Ограничение запросов к админке (100/мин)</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.middlewares.admin-ratelimit.ratelimit.average=100&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.middlewares.admin-ratelimit.ratelimit.period=1m&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Middleware: Базовая аутентификация для админки (создайте свой пароль!)</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.middlewares.admin-auth.basicauth.users=admin:$$2y$$05$$YOUR_GENERATED_PASSWORD_HASH&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Цепочка Middleware для основного сайта: Сжатие -&gt; Заголовки</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.wp-site.middlewares=compress, security-headers&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Цепочка Middleware для админки: Аутентификация -&gt; Ограничение запросов -&gt; Сжатие -&gt; Заголовки</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.wp-admin.middlewares=admin-auth, admin-ratelimit, compress, security-headers&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">web</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">db</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">mysql:8.0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">MYSQL_DATABASE</span>: <span style="color:#ae81ff">exampledb</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">MYSQL_USER</span>: <span style="color:#ae81ff">exampleuser</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">MYSQL_PASSWORD</span>: <span style="color:#ae81ff">examplepass</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">MYSQL_RANDOM_ROOT_PASSWORD</span>: <span style="color:#e6db74">&#39;1&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">web</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">web</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">web</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Итак, что мы сделали в этом конфиге:</p>
+<ul>
+<li>Для всего сайта: включили сжатие и безопасные заголовки.</li>
+<li>Для админки (/wp-admin): добавили двойную защиту — базовую аутентификацию и ограничение по количеству запросов. Теперь даже если злоумышленник узнает пароль от WordPress, ему будет очень сложно провести атаку подбора.</li>
+</ul>
+<p>Тестирование и отладка.</p>
+<p>Инструменты для проверки: Браузер Developer Tools (вкладка Network) -  посмотрите на заголовки ответа (Response Headers). Вы должны увидеть Strict-Transport-Security, X-Frame-Options и другие, которые мы настроили.</p>
+<p>Команда <code>curl</code> - идеальна для проверки.</p>
+<p><code>curl -I http://wp.localhost</code> — проверить заголовки.</p>
+<p><code>curl http://admin.localhost</code> — убедиться, что запрашивает пароль (вернет 401 Unauthorized).</p>
+<p><code>curl -u myuser:mypassword http://admin.localhost</code> — доступ с аутентификацией.</p>
+<p>Чеклист безопасности нашего блога:</p>
+<ul>
+<li>Базовая аутентификация включена для критичных зон.</li>
+<li>Настроены безопасные заголовки (HSTS, X-Frame-Options).</li>
+<li>Включено сжатие для текстового контента.</li>
+<li>Настроены ограничения по частоте запросов для API/админки.</li>
+</ul>
+<h2>Часть 4. Обзор middleware в Traefik — полный список помощников<span class="hx:absolute hx:-mt-20" id="часть-4-обзор-middleware-в-traefik--полный-список-помощников"></span>
+    <a href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-4-%d0%be%d0%b1%d0%b7%d0%be%d1%80-middleware-%d0%b2-traefik--%d0%bf%d0%be%d0%bb%d0%bd%d1%8b%d0%b9-%d1%81%d0%bf%d0%b8%d1%81%d0%be%d0%ba-%d0%bf%d0%be%d0%bc%d0%be%d1%89%d0%bd%d0%b8%d0%ba%d0%be%d0%b2" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Теперь, когда мы разобрались с основными middleware, давайте посмотрим на весь арсенал &ldquo;помощников швейцара&rdquo;, доступный в Traefik 3. Это поможет нам понять, какие инструменты есть в нашем распоряжении для решения различных задач.</p>
+<h3>Категории middleware<span class="hx:absolute hx:-mt-20" id="категории-middleware"></span>
+    <a href="#%d0%ba%d0%b0%d1%82%d0%b5%d0%b3%d0%be%d1%80%d0%b8%d0%b8-middleware" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><h4>Middleware для безопасности<span class="hx:absolute hx:-mt-20" id="middleware-для-безопасности"></span>
+    <a href="#middleware-%d0%b4%d0%bb%d1%8f-%d0%b1%d0%b5%d0%b7%d0%be%d0%bf%d0%b0%d1%81%d0%bd%d0%be%d1%81%d1%82%d0%b8" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><ul>
+<li><code>basicAuth</code> — базовая аутентификация (логин/пароль)</li>
+<li><code>digestAuth</code> — Digest-аутентификация</li>
+<li><code>forwardAuth</code> — внешняя аутентификация через другой сервис</li>
+<li><code>ipAllowList</code> — белый список IP-адресов</li>
+<li><code>ipWhiteList</code> — устаревший аналог ipAllowList</li>
+<li><code>rateLimit</code> — ограничение частоты запросов</li>
+<li><code>headers</code> — управление HTTP-заголовками безопасности</li>
+<li><code>redirectScheme</code> — перенаправление между схемами (HTTP/HTTPS)</li>
+<li><code>sslRedirect</code> — автоматическое перенаправление на HTTPS</li>
+</ul>
+<h4>Middleware для оптимизации<span class="hx:absolute hx:-mt-20" id="middleware-для-оптимизации"></span>
+    <a href="#middleware-%d0%b4%d0%bb%d1%8f-%d0%be%d0%bf%d1%82%d0%b8%d0%bc%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d0%b8" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><ul>
+<li><code>compress</code> — сжатие ответов (gzip, brotli)</li>
+<li><code>retry</code> — повторная отправка запросов при ошибках</li>
+<li><code>circuitBreake</code>r — автоматический выключатель при проблемах</li>
+<li><code>buffering</code> — буферизация больших запросов/ответов</li>
+<li><code>inFlightReq</code> — ограничение количества одновременных запросов</li>
+</ul>
+<h4>Middleware для модификации запросов<span class="hx:absolute hx:-mt-20" id="middleware-для-модификации-запросов"></span>
+    <a href="#middleware-%d0%b4%d0%bb%d1%8f-%d0%bc%d0%be%d0%b4%d0%b8%d1%84%d0%b8%d0%ba%d0%b0%d1%86%d0%b8%d0%b8-%d0%b7%d0%b0%d0%bf%d1%80%d0%be%d1%81%d0%be%d0%b2" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><ul>
+<li><code>addPrefix</code> — добавление префикса к URL</li>
+<li><code>stripPrefix</code> — удаление префикса из URL</li>
+<li><code>stripPrefixRegex</code> — удаление префикса по регулярному выражению</li>
+<li><code>replacePath</code> — замена пути запроса</li>
+<li><code>replacePathRegex</code> — замена пути по регулярному выражению</li>
+</ul>
+<h4>Middleware для управления трафиком<span class="hx:absolute hx:-mt-20" id="middleware-для-управления-трафиком"></span>
+    <a href="#middleware-%d0%b4%d0%bb%d1%8f-%d1%83%d0%bf%d1%80%d0%b0%d0%b2%d0%bb%d0%b5%d0%bd%d0%b8%d1%8f-%d1%82%d1%80%d0%b0%d1%84%d0%b8%d0%ba%d0%be%d0%bc" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><ul>
+<li><code>chain</code> — объединение нескольких middleware в цепочку</li>
+<li><code>errorPage</code> — кастомные страницы ошибок</li>
+<li><code>passTLSClientCert</code> — передача клиентских TLS-сертификатов</li>
+<li><code>plugins</code> — пользовательские middleware через плагины</li>
+</ul>
+<h3>Примеры конфигурации для разных middleware<span class="hx:absolute hx:-mt-20" id="примеры-конфигурации-для-разных-middleware"></span>
+    <a href="#%d0%bf%d1%80%d0%b8%d0%bc%d0%b5%d1%80%d1%8b-%d0%ba%d0%be%d0%bd%d1%84%d0%b8%d0%b3%d1%83%d1%80%d0%b0%d1%86%d0%b8%d0%b8-%d0%b4%d0%bb%d1%8f-%d1%80%d0%b0%d0%b7%d0%bd%d1%8b%d1%85-middleware" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><h4>Digest Auth (в <code>dynamic/middleware.yml</code>)<span class="hx:absolute hx:-mt-20" id="digest-auth-в-dynamicmiddlewareyml"></span>
+    <a href="#digest-auth-%d0%b2-dynamicmiddlewareyml" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">http</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">middlewares</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">digest-auth</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">digestAuth</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">users</span>:
+</span></span><span style="display:flex;"><span>          - <span style="color:#e6db74">&#34;user1:traefik:password1&#34;</span>
+</span></span><span style="display:flex;"><span>          - <span style="color:#e6db74">&#34;user2:traefik:password2&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<h4>Forward Auth (внешняя аутентификация)<span class="hx:absolute hx:-mt-20" id="forward-auth-внешняя-аутентификация"></span>
+    <a href="#forward-auth-%d0%b2%d0%bd%d0%b5%d1%88%d0%bd%d1%8f%d1%8f-%d0%b0%d1%83%d1%82%d0%b5%d0%bd%d1%82%d0%b8%d1%84%d0%b8%d0%ba%d0%b0%d1%86%d0%b8%d1%8f" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">http</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">middlewares</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">external-auth</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">forwardAuth</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">address</span>: <span style="color:#e6db74">&#34;https://auth-service.example.com/validate&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">trustForwardHeader</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">authResponseHeaders</span>:
+</span></span><span style="display:flex;"><span>          - <span style="color:#e6db74">&#34;X-User-Id&#34;</span>
+</span></span><span style="display:flex;"><span>          - <span style="color:#e6db74">&#34;X-User-Role&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<h4>Strip Prefix (удаление префикса URL)<span class="hx:absolute hx:-mt-20" id="strip-prefix-удаление-префикса-url"></span>
+    <a href="#strip-prefix-%d1%83%d0%b4%d0%b0%d0%bb%d0%b5%d0%bd%d0%b8%d0%b5-%d0%bf%d1%80%d0%b5%d1%84%d0%b8%d0%ba%d1%81%d0%b0-url" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">http</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">middlewares</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">api-strip</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">stripPrefix</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">prefixes</span>:
+</span></span><span style="display:flex;"><span>          - <span style="color:#e6db74">&#34;/api/v1&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Запрос /api/v1/users → будет отправлен в сервис как /users</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<h3>Replace Path (замена пути)<span class="hx:absolute hx:-mt-20" id="replace-path-замена-пути"></span>
+    <a href="#replace-path-%d0%b7%d0%b0%d0%bc%d0%b5%d0%bd%d0%b0-%d0%bf%d1%83%d1%82%d0%b8" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">http</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">middlewares</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">legacy-redirect</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">replacePath</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">path</span>: <span style="color:#e6db74">&#34;/new-path&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<h4>Error Pages (кастомные страницы ошибок)<span class="hx:absolute hx:-mt-20" id="error-pages-кастомные-страницы-ошибок"></span>
+    <a href="#error-pages-%d0%ba%d0%b0%d1%81%d1%82%d0%be%d0%bc%d0%bd%d1%8b%d0%b5-%d1%81%d1%82%d1%80%d0%b0%d0%bd%d0%b8%d1%86%d1%8b-%d0%be%d1%88%d0%b8%d0%b1%d0%be%d0%ba" class="subheading-anchor" aria-label="Permalink for this section"></a></h4><div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">http</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">middlewares</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">custom-errors</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">errors</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">status</span>:
+</span></span><span style="display:flex;"><span>          - <span style="color:#e6db74">&#34;400-599&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">service</span>: <span style="color:#ae81ff">error-service</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">query</span>: <span style="color:#e6db74">&#34;/{status}.html&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Как выбрать подходящий middleware? Вот общие рекомендации, хотя это дело - творческое&hellip;.</p>
+<ul>
+<li>Для защиты API → rateLimit + ipAllowList + headers</li>
+<li>Для веб-приложений → compress + headers + basicAuth (для админки)</li>
+<li>Для микросервисов → circuitBreaker + retry + chain</li>
+<li>Для миграции старых систем → replacePath + stripPrefix</li>
+</ul>
+<p><strong>Важные замечания:</strong></p>
+<ul>
+<li>Порядок имеет значение: Middleware выполняются в том порядке, в котором указаны в цепочке</li>
+<li>Производительность: Каждый middleware добавляет небольшую задержку</li>
+<li>Тестирование: Всегда проверяйте middleware в staging-окружении перед продакшеном</li>
+</ul>
+<p>Теперь у вас есть полная картина того, какие &ldquo;помощники&rdquo; доступны вашему швейцару Traefik!</p>
+<p><em><strong>Примечание:</strong></em> Полный актуальный список middleware всегда можно найти в <a href="https://doc.traefik.io/traefik/reference/routing-configuration/http/middlewares/overview/"target="_blank" rel="noopener">официальной документации Traefik</a>.</p>
+<h2>Заключение<span class="hx:absolute hx:-mt-20" id="заключение"></span>
+    <a href="#%d0%b7%d0%b0%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Поздравляем! Теперь наш швейцар Traefik обзавелся целым штатом умных помощников — Middleware. Вы научились защищать приложения от самых распространённых угроз и оптимизировать их работу.</p>
+<p>Middleware — это мощные и гибкие инструменты для обработки запросов. Их можно комбинировать в цепочки для комплексной защиты.</p>
+<p>Безопасность должна настраиваться с самого начала разработки.</p>
+<p>В следующей статье мы превратим нашего швейцара в самого осведомлённого сотрудника: научим его собирать и показывать метрики и логи о том, что происходит в вашей системе. Вы будете видеть всё: кто заходит, куда направляется и нет ли подозрительной активности.</p>
+<p>Если вы хотите потренироваться в настойке Middleware, то могу предложить выполнить вот такое задание:</p>
+<ol>
+<li>
+<p>Разверните пример с WordPress по инструкции выше.</p>
+</li>
+<li>
+<p>Создайте свой Middleware, который добавляет кастомный заголовок X-Student-Name: YourName к вашему сервису.</p>
+</li>
+<li>
+<p>Убедитесь с помощью curl -I, что заголовок действительно возвращается.</p>
+</li>
+</ol>
+<p>Удачи в изучении Traefik!</p>
+
+        </div>
+        <div class="hx:mt-16"></div>
+        <div class="hx:mb-8 hx:flex hx:items-center hx:border-t hx:pt-8 hx:border-gray-200 hx:dark:border-neutral-800 hx:contrast-more:border-neutral-400 hx:dark:contrast-more:border-neutral-400 hx:print:hidden"><a
+        href="/traefik/traefik1/"
+        title="1. Что такое Traefik"
+        class="hx:flex hx:max-w-[50%] hx:items-center hx:gap-1 hx:py-4 hx:text-base hx:font-medium hx:text-gray-600 hx:transition-colors [word-break:break-word] hx:hover:text-primary-600 hx:dark:text-gray-300 hx:md:text-lg hx:ltr:pr-4 hx:rtl:pl-4"
+      ><svg class="hx:inline hx:h-5 hx:shrink-0 hx:ltr:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>1. Что такое Traefik</a><a
+        href="/traefik/traefik3/"
+        title="3. Lets Encrypt, SSL..."
+        class="hx:flex hx:max-w-[50%] hx:items-center hx:gap-1 hx:py-4 hx:text-base hx:font-medium hx:text-gray-600 hx:transition-colors [word-break:break-word] hx:hover:text-primary-600 hx:dark:text-gray-300 hx:md:text-lg hx:ltr:ml-auto hx:ltr:pl-4 hx:ltr:text-right hx:rtl:mr-auto hx:rtl:pr-4 hx:rtl:text-left"
+      >3. Lets Encrypt, SSL...<svg class="hx:inline hx:h-5 hx:shrink-0 hx:rtl:-rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></a></div>
+        
+      </main>
+    </article>
+  </div>
+
+      <footer class="hextra-footer hx:bg-gray-100 hx:pb-[env(safe-area-inset-bottom)] hx:dark:bg-neutral-900 hx:print:bg-transparent"><div class="hextra-custom-footer hextra-max-footer-width hx:pl-[max(env(safe-area-inset-left),1.5rem)] hx:pr-[max(env(safe-area-inset-right),1.5rem)] hx:text-gray-600 hx:dark:text-gray-400"></div><div
+      class="hextra-max-footer-width hx:mx-auto hx:flex hx:justify-center hx:py-12 hx:pl-[max(env(safe-area-inset-left),1.5rem)] hx:pr-[max(env(safe-area-inset-right),1.5rem)] hx:text-gray-600 hx:dark:text-gray-400 hx:md:justify-start"
+    >
+      <div class="hx:flex hx:w-full hx:flex-col hx:items-center hx:sm:items-start"><div class="hx:font-semibold">При поддержке GitHub, HUGO, Hextra</div><div class="hx:mt-6 hx:text-xs">2025 Короткие заметки о технологиях и IT</div></div>
+    </div></footer>
+
+    
+    <script defer src="/js/main.js" integrity=""></script>
+<script defer src="/js/flexsearch.9f5b5908f93ae86f1ecd4b043b799f580c2d1654e703dd9357d568ac41b2547a.js" integrity="sha256-n1tZCPk66G8ezUsEO3mfWAwtFlTnA92TV9VorEGyVHo=" crossorigin="anonymous"></script>
+        <script defer src="/ru.search.js" integrity=""></script>
+  </body>
+</html>

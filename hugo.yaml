@@ -1,0 +1,132 @@
+baseURL: http://localhost
+
+languageCode: ru-ru
+defaultContentLanguage: ru
+
+title: Короткие заметки о технологиях и IT
+author: DigitalChip
+
+theme: hextra
+
+ignoreLogs: ['warning-goldmark-raw-html']
+
+params:
+
+  # banner:
+  #   key: "announcement"
+  #   message: "🧨 Breaking news!!! New relise our products! \    
+  #     [youtube](https://you.be/234234)
+  #     Coming soon!"
+
+  theme:
+    # light | dark | system
+    default: system
+    # Theme switcher in footer
+    displayToggle: false
+
+  navbar:
+    displayTitle: true
+    displayLogo: true
+    logo:
+      path: img/logo.svg
+      dark: img/logo-dark.svg
+      width: 48
+      height: 48
+      # link: /
+    width: normal
+
+  footer:
+    enable: true
+    displayCopyright: true
+    displayPoweredBy: true
+    width: normal
+
+  blog:
+    width: normal
+    list:
+      displayTags: true
+      # date | lastmod | publishDate | title | weight
+      sortBy: date
+      sortOrder: desc # or "asc"
+      # Pagination
+      pagerSize: 10
+
+    article:
+      displayPagination: true
+
+  toc:
+    displayTags: true
+
+  page:
+    # full (100%), wide (90rem), normal (80rem)
+    width: normal
+    # tabs:
+    #   sync: true
+
+  highlight:
+    copy:
+      enable: true
+      # hover | always
+      display: hover
+
+menu:
+  main:
+    - identifier: Materials
+      name: Материалы
+      weight: 1
+    
+    - name: Blog
+      pageRef: /blog
+      weight: 2
+    
+    - name: About
+      pageRef: /pages/about
+      weight: 3
+    
+    - name: Search
+      weight: 4
+      params:
+        type: search
+    
+    - name: Theme Toggle
+      params:
+        type: theme-toggle
+        label: false # optional, default is false
+    
+    - name: GitHub
+      weight: 5
+      url: "https://github.com/DigitalChip/hobbybits.github.io/issues"
+      params:
+        icon: github
+
+    - identifier: traefik
+      name: "Про Traefik 3"
+      url: /traefik
+      parent: Materials
+      params:
+        type: link
+        icon: academic-cap
+    
+    - identifier: nginx
+      name: "Конфигурация Nginx"
+      url: /nginx
+      parent: Materials
+      params:
+        type: link
+        icon: academic-cap
+
+  # sidebar:
+  #   - identifier: more
+  #     name: More
+  #     params:
+  #       type: separator
+  #     weight: 1
+  #   - identifier: about
+  #     name: "About"
+  #     pageRef: "/about"
+  #     weight: 2
+  #   - identifier: hugoDocs
+  #     name: "Hugo Docs ↗"
+  #     url: "https://gohugo.io/documentation/"
+  #     weight: 3
+  

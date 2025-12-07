@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="robots" content="noindex, nofollow" />
+  <link rel="icon shortcut" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" id="favicon-svg" />
+<link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
+<link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+<link fetchpriority="low" href="/site.webmanifest" rel="manifest" />
+<title>3. Lets Encrypt, SSL... – Короткие заметки о технологиях и IT</title>
+  <meta name="description" content="Middleware и безопасность — защищаем ваши приложения" /><link rel="canonical" href="http://localhost:1313/traefik/traefik3/" itemprop="url" />
+
+<meta property="og:title" content="3. Lets Encrypt, SSL...">
+<meta
+  property="og:description"
+  content="
+    Middleware и безопасность — защищаем ваши приложения
+  ">
+<meta
+  property="og:type"
+  content="
+    article
+  ">
+<meta property="og:url" content="http://localhost:1313/traefik/traefik3/"><meta property="article:section" content="traefik">
+
+<meta
+  property="article:published_time"
+  content="2025-12-02T20:57:00+03:00">
+
+
+<meta
+  property="article:modified_time"
+  content="2025-12-02T20:57:00+03:00">
+
+
+
+  <meta itemprop="name" content="3. Lets Encrypt, SSL...">
+  <meta itemprop="description" content="Middleware и безопасность — защищаем ваши приложения">
+  <meta itemprop="datePublished" content="2025-12-02T20:57:00+03:00">
+  <meta itemprop="dateModified" content="2025-12-02T20:57:00+03:00">
+  <meta itemprop="wordCount" content="3189">
+  <meta itemprop="keywords" content="Traefik,Https,Proxy,Docker,Middlewares">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="3. Lets Encrypt, SSL...">
+  <meta name="twitter:description" content="Middleware и безопасность — защищаем ваши приложения">
+<link href="/css/compiled/main.css" rel="stylesheet" />
+    <link href="/css/variables.css" rel="stylesheet" />
+    <link href="/css/custom.css" rel="stylesheet" />
+
+  
+<script src="/js/main-head.js" integrity=""></script>
+
+  
+  
+  </head>
+<body><div class="hextra-nav-container hx:sticky hx:top-0 hx:z-20 hx:w-full hx:bg-transparent hx:print:hidden">
+  <div
+    class="hextra-nav-container-blur hx:pointer-events-none hx:absolute hx:z-[-1] hx:h-full hx:w-full hx:bg-white hx:dark:bg-dark hx:shadow-[0_2px_4px_rgba(0,0,0,.02),0_1px_0_rgba(0,0,0,.06)] hx:contrast-more:shadow-[0_0_0_1px_#000] hx:dark:shadow-[0_-1px_0_rgba(255,255,255,.1)_inset] hx:contrast-more:dark:shadow-[0_0_0_1px_#fff]"
+  ></div>
+
+  <nav class="hextra-max-navbar-width hx:mx-auto hx:flex hx:items-center hx:justify-end hx:gap-2 hx:h-16 hx:px-6">
+    <a class="hx:flex hx:items-center hx:hover:opacity-75 hx:ltr:mr-auto hx:rtl:ml-auto" href="/">
+    <img class="hx:mr-2 hx:block hx:dark:hidden" src="/img/logo.svg" alt="Logo" height="48" width="48" />
+    <img class="hx:mr-2 hx:hidden hx:dark:block" src="/img/logo-dark.svg" alt="Dark Logo" height="48" width="48" />
+    <span class="hx:mr-2 hx:font-extrabold hx:inline hx:select-none" title="Короткие заметки о технологиях и IT">Короткие заметки о технологиях и IT</span>
+</a>
+<div class="hx:relative hx:hidden hx:md:inline-block">
+  <button
+    title="Материалы"
+    data-state="closed"
+    class="hextra-nav-menu-toggle hx:cursor-pointer hx:text-sm hx:contrast-more:text-gray-700 hx:contrast-more:dark:text-gray-100 hx:relative hx:-ml-2 hx:whitespace-nowrap hx:p-2 hx:flex hx:items-center hx:gap-1 hx:text-gray-600 hx:hover:text-gray-800 hx:dark:text-gray-400 hx:dark:hover:text-gray-200"
+    type="button"
+    aria-label="Материалы"
+  ><span class="hx:text-center">Материалы</span><svg height=12 class="hx:transition-transform hx:duration-200 hx:ease-in-out" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button>
+  <ul
+    class="hextra-nav-menu-items hx:hidden hx:z-20 hx:max-h-64 hx:overflow-auto hx:rounded-md hx:ring-1 hx:ring-black/5 hx:bg-white hx:py-1 hx:text-sm hx:shadow-lg hx:dark:ring-white/20 hx:dark:bg-neutral-800"
+    style="min-width: 100px;"
+  >
+    <li class="hextra-nav-menu-item hx:flex hx:flex-col">
+      <a
+        href="/nginx"
+        
+        class="hx:text-gray-600 hx:hover:text-gray-800 hx:dark:text-gray-400 hx:dark:hover:text-gray-200 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9 hx:flex hx:items-center hx:gap-1"
+      ><span class="hx:inline-flex hx:items-center"><svg height="1em" class="hx:inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg></span>Конфигурация Nginx</a>
+    </li><li class="hextra-nav-menu-item hx:flex hx:flex-col">
+      <a
+        href="/traefik"
+        
+        class="hx:text-gray-600 hx:hover:text-gray-800 hx:dark:text-gray-400 hx:dark:hover:text-gray-200 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9 hx:flex hx:items-center hx:gap-1"
+      ><span class="hx:inline-flex hx:items-center"><svg height="1em" class="hx:inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg></span>Про Traefik 3</a>
+    </li></ul>
+</div><a
+  title=""
+  href="/blog"
+  
+  class="hx:text-sm hx:contrast-more:text-gray-700 hx:contrast-more:dark:text-gray-100 hx:relative hx:-ml-2 hx:hidden hx:whitespace-nowrap hx:p-2 hx:md:inline-flex hx:items-center hx:gap-1 hx:text-gray-600 hx:hover:text-gray-800 hx:dark:text-gray-400 hx:dark:hover:text-gray-200"
+><span class="hx:text-center">Blog</span>
+</a><a
+  title=""
+  href="/pages/about"
+  
+  class="hx:text-sm hx:contrast-more:text-gray-700 hx:contrast-more:dark:text-gray-100 hx:relative hx:-ml-2 hx:hidden hx:whitespace-nowrap hx:p-2 hx:md:inline-flex hx:items-center hx:gap-1 hx:text-gray-600 hx:hover:text-gray-800 hx:dark:text-gray-400 hx:dark:hover:text-gray-200"
+><span class="hx:text-center">About</span>
+</a><div class="hextra-search-wrapper hx:relative hx:md:w-64">
+  <div class="hx:relative hx:flex hx:items-center hx:text-gray-900 hx:contrast-more:text-gray-800 hx:dark:text-gray-300 hx:contrast-more:dark:text-gray-300">
+    <input
+      placeholder="Поиск..."
+      class="hextra-search-input hx:focus:hextra-focus hx:block hx:w-full hx:appearance-none hx:rounded-lg hx:px-3 hx:py-2 hx:transition-colors hx:text-base hx:leading-tight hx:md:text-sm hx:bg-black/[.05] hx:dark:bg-gray-50/10 hx:focus:bg-white hx:dark:focus:bg-dark hx:placeholder:text-gray-500 hx:dark:placeholder:text-gray-400 hx:contrast-more:border hx:contrast-more:border-current"
+      type="search"
+      value=""
+      spellcheck="false"
+    />
+    <kbd
+      class="hx:absolute hx:my-1.5 hx:select-none hx:ltr:right-1.5 hx:rtl:left-1.5 hx:h-5 hx:rounded-sm hx:bg-white hx:px-1.5 hx:font-mono hx:text-[10px] hx:font-medium hx:text-gray-500 hx:border hx:border-gray-200 hx:dark:border-gray-100/20 hx:dark:bg-dark/50 hx:contrast-more:border-current hx:contrast-more:text-current hx:contrast-more:dark:border-current hx:items-center hx:gap-1 hx:transition-opacity hx:pointer-events-none hx:hidden hx:sm:flex"
+    >
+      CTRL K
+    </kbd>
+  </div>
+
+  <div>
+    <ul
+      class="hextra-search-results hextra-scrollbar hx:hidden hx:border hx:border-gray-200 hx:bg-white hx:text-gray-100 hx:dark:border-neutral-800 hx:dark:bg-neutral-900 hx:absolute hx:top-full hx:z-20 hx:mt-2 hx:overflow-auto hx:overscroll-contain hx:rounded-xl hx:py-2.5 hx:shadow-xl hx:max-h-[min(calc(50vh-11rem-env(safe-area-inset-bottom)),400px)] hx:md:max-h-[min(calc(100vh-5rem-env(safe-area-inset-bottom)),400px)] hx:inset-x-0 hx:ltr:md:left-auto hx:rtl:md:right-auto hx:contrast-more:border hx:contrast-more:border-gray-900 hx:contrast-more:dark:border-gray-50 hx:w-screen hx:min-h-[100px] hx:max-w-[min(calc(100vw-2rem),calc(100%+20rem))]"
+      style="transition: max-height 0.2s ease 0s;"
+    ></ul>
+  </div>
+</div>
+
+          <a class="hx:p-2 hx:text-current" target="_blank" rel="noreferrer" href="https://github.com/DigitalChip/hobbybits.github.io/issues" title="GitHub">
+<svg height=24 fill="currentColor" viewBox="3 3 18 18">
+  <path d="M12 3C7.0275 3 3 7.12937 3 12.2276C3 16.3109 5.57625 19.7597 9.15374 20.9824C9.60374 21.0631 9.77249 20.7863 9.77249 20.5441C9.77249 20.3249 9.76125 19.5982 9.76125 18.8254C7.5 19.2522 6.915 18.2602 6.735 17.7412C6.63375 17.4759 6.19499 16.6569 5.8125 16.4378C5.4975 16.2647 5.0475 15.838 5.80124 15.8264C6.51 15.8149 7.01625 16.4954 7.18499 16.7723C7.99499 18.1679 9.28875 17.7758 9.80625 17.5335C9.885 16.9337 10.1212 16.53 10.38 16.2993C8.3775 16.0687 6.285 15.2728 6.285 11.7432C6.285 10.7397 6.63375 9.9092 7.20749 9.26326C7.1175 9.03257 6.8025 8.08674 7.2975 6.81794C7.2975 6.81794 8.05125 6.57571 9.77249 7.76377C10.4925 7.55615 11.2575 7.45234 12.0225 7.45234C12.7875 7.45234 13.5525 7.55615 14.2725 7.76377C15.9937 6.56418 16.7475 6.81794 16.7475 6.81794C17.2424 8.08674 16.9275 9.03257 16.8375 9.26326C17.4113 9.9092 17.76 10.7281 17.76 11.7432C17.76 15.2843 15.6563 16.0687 13.6537 16.2993C13.98 16.5877 14.2613 17.1414 14.2613 18.0065C14.2613 19.2407 14.25 20.2326 14.25 20.5441C14.25 20.7863 14.4188 21.0746 14.8688 20.9824C16.6554 20.364 18.2079 19.1866 19.3078 17.6162C20.4077 16.0457 20.9995 14.1611 21 12.2276C21 7.12937 16.9725 3 12 3Z"></path>
+</svg>
+
+<span class="hx:sr-only">GitHub</span>
+          </a><div class="hx:flex hx:justify-items-start hx:group" data-theme="light">
+  <button
+    title="Изменить тему"
+    data-state="closed"
+    data-location="top"
+    class="hextra-theme-toggle hx:cursor-pointer hx:rounded-md hx:text-left hx:font-medium hx:p-2 hx:grow"
+    type="button"
+    aria-label="Изменить тему"
+  >
+    <div class="hx:flex hx:items-center hx:gap-2 hx:capitalize"><svg height=24 class="hx:group-data-[theme=dark]:hidden hx:group-data-[theme=system]:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg height=24 class="hx:group-data-[theme=light]:hidden hx:group-data-[theme=system]:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+<svg height=24 class="hx:group-data-[theme=dark]:hidden hx:group-data-[theme=light]:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="currentColor">
+  <path d="M 11.996094,2 C 6.4986225,2.0192368 2.03125,6.5024993 2.03125,12 c 0,5.497501 4.4673725,9.980763 9.964844,10 H 12 12.0039 c 5.497471,-0.01924 9.964844,-4.502499 9.964844,-10 0,-5.4975007 -4.467373,-9.9807632 -9.964844,-10 H 12 Z M 12,4 c 4.417218,0.017598 7.96875,3.5822356 7.96875,8 0,4.417764 -3.551532,7.982402 -7.96875,8 z" />
+</svg>
+
+</div>
+  </button>
+  <ul
+    class="hextra-theme-toggle-options hx:hidden hx:z-20 hx:max-h-64 hx:overflow-auto hx:rounded-md hx:ring-1 hx:ring-black/5 hx:bg-white hx:py-1 hx:text-sm hx:shadow-lg hx:dark:ring-white/20 hx:dark:bg-neutral-800"
+    style="position: fixed; inset: auto auto 0px 0px; margin: 0px; min-width: 100px;"
+    data-theme="light"
+  >
+    <li class="hx:flex hx:flex-col">
+      <p
+        data-item="light"
+        class="hx:text-gray-800 hx:dark:text-gray-100 hx:hover:bg-primary-50 hx:hover:text-primary-600 hx:hover:dark:bg-primary-500/10 hx:hover:dark:text-primary-600 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9"
+      >
+        Светлая
+         <span class="hx:absolute hx:inset-y-0 hx:flex hx:items-center hx:ltr:right-3 hx:rtl:left-3 hx:group-data-[theme=dark]:hidden hx:group-data-[theme=system]:hidden"><svg height=1em width=1em xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+      </p>
+    </li>
+    <li class="hx:flex hx:flex-col">
+      <p
+        data-item="dark"
+        class="hx:text-gray-800 hx:dark:text-gray-100 hx:hover:bg-primary-50 hx:hover:text-primary-600 hx:hover:dark:bg-primary-500/10 hx:hover:dark:text-primary-600 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9"
+      >
+        Темная
+         <span class="hx:absolute hx:inset-y-0 hx:flex hx:items-center hx:ltr:right-3 hx:rtl:left-3 hx:group-data-[theme=light]:hidden hx:group-data-[theme=system]:hidden"><svg height=1em width=1em xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+      </p>
+    </li>
+    <li class="hx:flex hx:flex-col">
+      <p
+        data-item="system"
+        class="hx:text-gray-800 hx:dark:text-gray-100 hx:hover:bg-primary-50 hx:hover:text-primary-600 hx:hover:dark:bg-primary-500/10 hx:hover:dark:text-primary-600 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9"
+      >
+        System
+         <span class="hx:absolute hx:inset-y-0 hx:flex hx:items-center hx:ltr:right-3 hx:rtl:left-3 hx:group-data-[theme=dark]:hidden hx:group-data-[theme=light]:hidden"><svg height=1em width=1em xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+      </p>
+    </li>
+  </ul>
+</div><button type="button" aria-label="Menu" class="hextra-hamburger-menu hx:cursor-pointer hx:-mr-2 hx:rounded-sm hx:p-2 hx:active:bg-gray-400/20 hx:md:hidden"><svg height=24 fill="none" viewBox="0 0 24 24" stroke="currentColor"><g><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8H20"></path></g><g><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16H20"></path></g></svg></button>
+  </nav>
+</div>
+
+  <div class='hx:mx-auto hx:flex hextra-max-page-width'>
+    <aside class="hextra-sidebar-container hx:flex hx:flex-col hx:print:hidden hx:md:top-16 hx:md:shrink-0 hx:md:w-64 hx:md:self-start hx:max-md:[transform:translate3d(0,-100%,0)] hx:md:sticky">
+  
+  <div class="hx:px-4 hx:pt-4 hx:md:hidden">
+    <div class="hextra-search-wrapper hx:relative hx:md:w-64">
+  <div class="hx:relative hx:flex hx:items-center hx:text-gray-900 hx:contrast-more:text-gray-800 hx:dark:text-gray-300 hx:contrast-more:dark:text-gray-300">
+    <input
+      placeholder="Поиск..."
+      class="hextra-search-input hx:focus:hextra-focus hx:block hx:w-full hx:appearance-none hx:rounded-lg hx:px-3 hx:py-2 hx:transition-colors hx:text-base hx:leading-tight hx:md:text-sm hx:bg-black/[.05] hx:dark:bg-gray-50/10 hx:focus:bg-white hx:dark:focus:bg-dark hx:placeholder:text-gray-500 hx:dark:placeholder:text-gray-400 hx:contrast-more:border hx:contrast-more:border-current"
+      type="search"
+      value=""
+      spellcheck="false"
+    />
+    <kbd
+      class="hx:absolute hx:my-1.5 hx:select-none hx:ltr:right-1.5 hx:rtl:left-1.5 hx:h-5 hx:rounded-sm hx:bg-white hx:px-1.5 hx:font-mono hx:text-[10px] hx:font-medium hx:text-gray-500 hx:border hx:border-gray-200 hx:dark:border-gray-100/20 hx:dark:bg-dark/50 hx:contrast-more:border-current hx:contrast-more:text-current hx:contrast-more:dark:border-current hx:items-center hx:gap-1 hx:transition-opacity hx:pointer-events-none hx:hidden hx:sm:flex"
+    >
+      CTRL K
+    </kbd>
+  </div>
+
+  <div>
+    <ul
+      class="hextra-search-results hextra-scrollbar hx:hidden hx:border hx:border-gray-200 hx:bg-white hx:text-gray-100 hx:dark:border-neutral-800 hx:dark:bg-neutral-900 hx:absolute hx:top-full hx:z-20 hx:mt-2 hx:overflow-auto hx:overscroll-contain hx:rounded-xl hx:py-2.5 hx:shadow-xl hx:max-h-[min(calc(50vh-11rem-env(safe-area-inset-bottom)),400px)] hx:md:max-h-[min(calc(100vh-5rem-env(safe-area-inset-bottom)),400px)] hx:inset-x-0 hx:ltr:md:left-auto hx:rtl:md:right-auto hx:contrast-more:border hx:contrast-more:border-gray-900 hx:contrast-more:dark:border-gray-50 hx:w-screen hx:min-h-[100px] hx:max-w-[min(calc(100vw-2rem),calc(100%+20rem))]"
+      style="transition: max-height 0.2s ease 0s;"
+    ></ul>
+  </div>
+</div>
+
+  </div>
+  <div class="hextra-scrollbar hx:overflow-y-auto hx:overflow-x-hidden hx:p-4 hx:grow hx:md:h-[calc(100vh-var(--navbar-height)-var(--menu-height))]">
+    <ul class="hx:flex hx:flex-col hx:gap-1 hx:md:hidden">
+      
+      
+          <li class=""><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/blog/"
+    
+  >Blog
+        <span class="hextra-sidebar-collapsible-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="hx:h-[18px] hx:min-w-[18px] hx:rounded-xs hx:p-0.5 hx:hover:bg-gray-800/5 hx:dark:hover:bg-gray-100/5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" class="hx:origin-center hx:transition-transform hx:rtl:-rotate-180"></path></svg></span>
+    </a><div class="hx:ltr:pr-0 hx:overflow-hidden">
+        <ul class='hx:relative hx:flex hx:flex-col hx:gap-1 hx:before:absolute hx:before:inset-y-1 hx:before:w-px hx:before:bg-gray-200 hx:before:content-[""] hx:ltr:ml-3 hx:ltr:pl-3 hx:ltr:before:left-0 hx:rtl:mr-3 hx:rtl:pr-3 hx:rtl:before:right-0 hx:dark:before:bg-neutral-800'><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/blog/2025-12-06/"
+    
+  >Первая запись в блоге
+    </a>
+              
+            </li></ul>
+      </div></li>
+          <li class="open"><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/"
+    
+  >Traefik 3
+        <span class="hextra-sidebar-collapsible-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="hx:h-[18px] hx:min-w-[18px] hx:rounded-xs hx:p-0.5 hx:hover:bg-gray-800/5 hx:dark:hover:bg-gray-100/5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" class="hx:origin-center hx:transition-transform hx:rtl:-rotate-180"></path></svg></span>
+    </a><div class="hx:ltr:pr-0 hx:overflow-hidden">
+        <ul class='hx:relative hx:flex hx:flex-col hx:gap-1 hx:before:absolute hx:before:inset-y-1 hx:before:w-px hx:before:bg-gray-200 hx:before:content-[""] hx:ltr:ml-3 hx:ltr:pl-3 hx:ltr:before:left-0 hx:rtl:mr-3 hx:rtl:pr-3 hx:rtl:before:right-0 hx:dark:before:bg-neutral-800'><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/traefik1/"
+    
+  >1. Что такое Traefik
+    </a>
+              
+            </li><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/traefik2/"
+    
+  >2. Middleware и безопасность
+    </a>
+              
+            </li><li class="hx:flex hx:flex-col open"><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hextra-sidebar-active-item hx:bg-primary-100 hx:font-semibold hx:text-primary-800 hx:contrast-more:border hx:contrast-more:border-primary-500 hx:dark:bg-primary-400/10 hx:dark:text-primary-600 hx:contrast-more:dark:border-primary-500"
+    href="/traefik/traefik3/"
+    
+  >3. Lets Encrypt, SSL...
+    </a>
+  
+    <ul class='hx:flex hx:flex-col hx:gap-1 hx:relative hx:before:absolute hx:before:inset-y-1 hx:before:w-px hx:before:bg-gray-200 hx:before:content-[""] hx:dark:before:bg-neutral-800 hx:ltr:pl-3 hx:ltr:before:left-0 hx:rtl:pr-3 hx:rtl:before:right-0 hx:ltr:ml-3 hx:rtl:mr-3'><li>
+              <a
+                href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-1-%d0%b7%d0%b0%d1%87%d0%b5%d0%bc-%d0%b2%d0%be%d0%be%d0%b1%d1%89%d0%b5-%d0%bd%d1%83%d0%b6%d0%b5%d0%bd-https"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Часть 1: Зачем вообще нужен HTTPS?</a>
+            </li>
+          <li>
+              <a
+                href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-2-lets-encrypt--%d1%80%d0%b5%d0%b2%d0%be%d0%bb%d1%8e%d1%86%d0%b8%d1%8f-%d0%b4%d0%be%d1%81%d1%82%d1%83%d0%bf%d0%bd%d0%be%d1%81%d1%82%d0%b8"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Часть 2: Let’s Encrypt — революция доступности</a>
+            </li>
+          <li>
+              <a
+                href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-3-certificates-resolvers--%d0%bd%d0%b0%d1%88-%d1%81%d0%bf%d0%b5%d1%86%d0%b8%d0%b0%d0%bb%d0%b8%d1%81%d1%82-%d0%bf%d0%be-%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba%d0%b0%d0%bc"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Часть 3: Certificates Resolvers — наш специалист по пропускам</a>
+            </li>
+          <li>
+              <a
+                href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-4-acme-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6%d0%b8--%d0%bf%d0%be%d0%b4%d1%82%d0%b2%d0%b5%d1%80%d0%b6%d0%b4%d0%b0%d0%b5%d0%bc-%d1%87%d1%82%d0%be-%d0%bc%d1%8b-%d1%85%d0%be%d0%b7%d1%8f%d0%b5%d0%b2%d0%b0"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Часть 4: ACME челленджи — подтверждаем, что мы хозяева</a>
+            </li>
+          <li>
+              <a
+                href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-5-%d0%bf%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0--%d0%bd%d0%b0%d1%81%d1%82%d1%80%d0%b0%d0%b8%d0%b2%d0%b0%d0%b5%d0%bc-http-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Часть 5: Практика — настраиваем HTTP-челлендж</a>
+            </li>
+          <li>
+              <a
+                href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-6-%d0%bf%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0--%d0%bf%d0%be%d0%b4%d0%ba%d0%bb%d1%8e%d1%87%d0%b0%d0%b5%d0%bc-%d0%b0%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%b9-ssl-%d0%ba-%d1%81%d0%b5%d1%80%d0%b2%d0%b8%d1%81%d1%83"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Часть 6: Практика — подключаем автоматический SSL к сервису</a>
+            </li>
+          <li>
+              <a
+                href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-7-wildcard-%d1%81%d0%b5%d1%80%d1%82%d0%b8%d1%84%d0%b8%d0%ba%d0%b0%d1%82%d1%8b--%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba-%d0%bd%d0%b0-%d0%b2%d0%b5%d1%81%d1%8c-%d0%be%d1%84%d0%b8%d1%81%d0%bd%d1%8b%d0%b9-%d0%ba%d0%be%d0%bc%d0%bf%d0%bb%d0%b5%d0%ba%d1%81"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Часть 7: Wildcard сертификаты — пропуск на весь офисный комплекс</a>
+            </li>
+          <li>
+              <a
+                href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-8-%d1%82%d0%b8%d0%bf%d0%b8%d1%87%d0%bd%d1%8b%d0%b5-%d0%bf%d1%80%d0%be%d0%b1%d0%bb%d0%b5%d0%bc%d1%8b-%d0%b8-%d1%80%d0%b5%d1%88%d0%b5%d0%bd%d0%b8%d1%8f--%d1%87%d1%82%d0%be-%d0%b4%d0%b5%d0%bb%d0%b0%d1%82%d1%8c-%d0%ba%d0%be%d0%b3%d0%b4%d0%b0-%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0-%d0%b7%d0%b0%d1%81%d1%82%d0%be%d0%bf%d0%be%d1%80%d0%b8%d0%bb%d0%b0%d1%81%d1%8c"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Часть 8: Типичные проблемы и решения — что делать, когда проверка застопорилась</a>
+            </li>
+          <li>
+              <a
+                href="#%d0%b7%d0%b0%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5"
+                class="hx:flex hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [word-break:break-word] hx:cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] hx:contrast-more:border hx:gap-2 hx:before:opacity-25 hx:before:content-['#'] hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:text-gray-900 hx:contrast-more:dark:text-gray-50 hx:contrast-more:border-transparent hx:contrast-more:hover:border-gray-900 hx:contrast-more:dark:hover:border-gray-50"
+              >Заключение</a>
+            </li>
+          </ul>
+  
+              
+            </li><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/traefik4/"
+    
+  >4. Мониторинг и метрики
+    </a>
+              
+            </li></ul>
+      </div></li>
+          <li class=""><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/nginx/"
+    
+  >Nginx
+        <span class="hextra-sidebar-collapsible-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="hx:h-[18px] hx:min-w-[18px] hx:rounded-xs hx:p-0.5 hx:hover:bg-gray-800/5 hx:dark:hover:bg-gray-100/5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" class="hx:origin-center hx:transition-transform hx:rtl:-rotate-180"></path></svg></span>
+    </a><div class="hx:ltr:pr-0 hx:overflow-hidden">
+        <ul class='hx:relative hx:flex hx:flex-col hx:gap-1 hx:before:absolute hx:before:inset-y-1 hx:before:w-px hx:before:bg-gray-200 hx:before:content-[""] hx:ltr:ml-3 hx:ltr:pl-3 hx:ltr:before:left-0 hx:rtl:mr-3 hx:rtl:pr-3 hx:rtl:before:right-0 hx:dark:before:bg-neutral-800'><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/nginx/nginx1/"
+    
+  >1. Nginx - Анатомия конфигурации Nginx
+    </a>
+              
+            </li><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/nginx/nginx2/"
+    
+  >2. Location: Мастер маршрутизации запросов
+    </a>
+              
+            </li></ul>
+      </div></li>
+          <li class=""><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/pages/"
+    
+  >Pages
+        <span class="hextra-sidebar-collapsible-button"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="hx:h-[18px] hx:min-w-[18px] hx:rounded-xs hx:p-0.5 hx:hover:bg-gray-800/5 hx:dark:hover:bg-gray-100/5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" class="hx:origin-center hx:transition-transform hx:rtl:-rotate-180"></path></svg></span>
+    </a><div class="hx:ltr:pr-0 hx:overflow-hidden">
+        <ul class='hx:relative hx:flex hx:flex-col hx:gap-1 hx:before:absolute hx:before:inset-y-1 hx:before:w-px hx:before:bg-gray-200 hx:before:content-[""] hx:ltr:ml-3 hx:ltr:pl-3 hx:ltr:before:left-0 hx:rtl:mr-3 hx:rtl:pr-3 hx:rtl:before:right-0 hx:dark:before:bg-neutral-800'><li class="hx:flex hx:flex-col "><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/pages/about/"
+    
+  >About
+    </a>
+              
+            </li></ul>
+      </div></li>
+    </ul>
+
+    <ul class="hx:flex hx:flex-col hx:gap-1 hx:max-md:hidden">
+        
+          <li class=""><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/traefik1/"
+    
+  >1. Что такое Traefik
+    </a></li>
+          <li class=""><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/traefik2/"
+    
+  >2. Middleware и безопасность
+    </a></li>
+          <li class="open"><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hextra-sidebar-active-item hx:bg-primary-100 hx:font-semibold hx:text-primary-800 hx:contrast-more:border hx:contrast-more:border-primary-500 hx:dark:bg-primary-400/10 hx:dark:text-primary-600 hx:contrast-more:dark:border-primary-500"
+    href="/traefik/traefik3/"
+    
+  >3. Lets Encrypt, SSL...
+    </a></li>
+          <li class=""><a
+    class="hx:flex hx:items-center hx:justify-between hx:gap-2 hx:cursor-pointer hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:transition-colors [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [word-break:break-word]
+      hx:text-gray-500 hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:contrast-more:border hx:contrast-more:border-transparent hx:contrast-more:text-gray-900 hx:contrast-more:hover:border-gray-900 hx:dark:text-neutral-400 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:contrast-more:dark:text-gray-50 hx:contrast-more:dark:hover:border-gray-50"
+    href="/traefik/traefik4/"
+    
+  >4. Мониторинг и метрики
+    </a></li>
+        
+      </ul>
+    </div>
+  
+  </aside>
+    
+<nav class="hextra-toc hx:order-last hx:hidden hx:w-64 hx:shrink-0 hx:xl:block hx:print:hidden hx:px-4" aria-label="table of contents">
+    <div class="hextra-scrollbar hx:sticky hx:top-16 hx:overflow-y-auto hx:pr-4 hx:pt-6 hx:text-sm [hyphens:auto] hx:max-h-[calc(100vh-var(--navbar-height)-env(safe-area-inset-bottom))] hx:ltr:-mr-4 hx:rtl:-ml-4"><p class="hx:mb-4 hx:font-semibold hx:tracking-tight">На этой странице</p><ul>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-1-%d0%b7%d0%b0%d1%87%d0%b5%d0%bc-%d0%b2%d0%be%d0%be%d0%b1%d1%89%d0%b5-%d0%bd%d1%83%d0%b6%d0%b5%d0%bd-https">Часть 1: Зачем вообще нужен HTTPS?
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-2-lets-encrypt--%d1%80%d0%b5%d0%b2%d0%be%d0%bb%d1%8e%d1%86%d0%b8%d1%8f-%d0%b4%d0%be%d1%81%d1%82%d1%83%d0%bf%d0%bd%d0%be%d1%81%d1%82%d0%b8">Часть 2: Let’s Encrypt — революция доступности
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-3-certificates-resolvers--%d0%bd%d0%b0%d1%88-%d1%81%d0%bf%d0%b5%d1%86%d0%b8%d0%b0%d0%bb%d0%b8%d1%81%d1%82-%d0%bf%d0%be-%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba%d0%b0%d0%bc">Часть 3: Certificates Resolvers — наш специалист по пропускам
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d0%ba%d0%b0%d0%ba-%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%b0%d0%b5%d1%82-certificates-resolver">Как работает Certificates Resolver?
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-4-acme-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6%d0%b8--%d0%bf%d0%be%d0%b4%d1%82%d0%b2%d0%b5%d1%80%d0%b6%d0%b4%d0%b0%d0%b5%d0%bc-%d1%87%d1%82%d0%be-%d0%bc%d1%8b-%d1%85%d0%be%d0%b7%d1%8f%d0%b5%d0%b2%d0%b0">Часть 4: ACME челленджи — подтверждаем, что мы хозяева
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#http-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6--%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0-%d0%bd%d0%b0-%d0%bc%d0%b5%d1%81%d1%82%d0%b5">HTTP-челлендж — “проверка на месте”
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#dns-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6--%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0-%d1%87%d0%b5%d1%80%d0%b5%d0%b7-%d1%81%d0%bf%d1%80%d0%b0%d0%b2%d0%be%d1%87%d0%bd%d1%83%d1%8e">DNS-челлендж — “проверка через справочную”
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-5-%d0%bf%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0--%d0%bd%d0%b0%d1%81%d1%82%d1%80%d0%b0%d0%b8%d0%b2%d0%b0%d0%b5%d0%bc-http-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6">Часть 5: Практика — настраиваем HTTP-челлендж
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-6-%d0%bf%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0--%d0%bf%d0%be%d0%b4%d0%ba%d0%bb%d1%8e%d1%87%d0%b0%d0%b5%d0%bc-%d0%b0%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%b9-ssl-%d0%ba-%d1%81%d0%b5%d1%80%d0%b2%d0%b8%d1%81%d1%83">Часть 6: Практика — подключаем автоматический SSL к сервису
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-7-wildcard-%d1%81%d0%b5%d1%80%d1%82%d0%b8%d1%84%d0%b8%d0%ba%d0%b0%d1%82%d1%8b--%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba-%d0%bd%d0%b0-%d0%b2%d0%b5%d1%81%d1%8c-%d0%be%d1%84%d0%b8%d1%81%d0%bd%d1%8b%d0%b9-%d0%ba%d0%be%d0%bc%d0%bf%d0%bb%d0%b5%d0%ba%d1%81">Часть 7: Wildcard сертификаты — пропуск на весь офисный комплекс
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#1-%d0%bd%d0%b0%d1%81%d1%82%d1%80%d0%be%d0%b9%d0%ba%d0%b0-dns-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6%d0%b0-%d0%b8-%d0%bf%d0%be%d0%bb%d1%83%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-wildcard-%d1%81%d0%b5%d1%80%d1%82%d0%b8%d1%84%d0%b8%d0%ba%d0%b0%d1%82%d0%be%d0%b2">1. Настройка DNS-челленджа и получение wildcard-сертификатов
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#2-dns-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6-%d0%b4%d0%bb%d1%8f-%d0%be%d1%82%d0%b4%d0%b5%d0%bb%d1%8c%d0%bd%d1%8b%d1%85-%d0%bf%d0%be%d0%b4%d0%b4%d0%be%d0%bc%d0%b5%d0%bd%d0%be%d0%b2--%d0%bf%d0%b5%d1%80%d1%81%d0%be%d0%bd%d0%b0%d0%bb%d1%8c%d0%bd%d1%8b%d0%b5-%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba%d0%b0-%d0%b4%d0%bb%d1%8f-%d0%ba%d0%b0%d0%b6%d0%b4%d0%be%d0%b3%d0%be-%d0%be%d1%82%d0%b4%d0%b5%d0%bb%d0%b0">2. DNS-челлендж для отдельных поддоменов — персональные пропуска для каждого отдела
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-8-%d1%82%d0%b8%d0%bf%d0%b8%d1%87%d0%bd%d1%8b%d0%b5-%d0%bf%d1%80%d0%be%d0%b1%d0%bb%d0%b5%d0%bc%d1%8b-%d0%b8-%d1%80%d0%b5%d1%88%d0%b5%d0%bd%d0%b8%d1%8f--%d1%87%d1%82%d0%be-%d0%b4%d0%b5%d0%bb%d0%b0%d1%82%d1%8c-%d0%ba%d0%be%d0%b3%d0%b4%d0%b0-%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0-%d0%b7%d0%b0%d1%81%d1%82%d0%be%d0%bf%d0%be%d1%80%d0%b8%d0%bb%d0%b0%d1%81%d1%8c">Часть 8: Типичные проблемы и решения — что делать, когда проверка застопорилась
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#rate-limit-exceeded--%d1%81%d0%bb%d0%b8%d1%88%d0%ba%d0%be%d0%bc-%d0%bc%d0%bd%d0%be%d0%b3%d0%be-%d0%b7%d0%b0%d1%8f%d0%b2%d0%be%d0%ba-%d0%bd%d0%b0-%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba%d0%b0">“Rate limit exceeded” — слишком много заявок на пропуска
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#challenge-failed--%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0-%d0%bd%d0%b5-%d0%bf%d1%80%d0%be%d0%b9%d0%b4%d0%b5%d0%bd%d0%b0">“Challenge failed” — проверка не пройдена
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#connection-timeout--%d1%82%d0%b0%d0%b9%d0%bc%d0%b0%d1%83%d1%82-%d1%81%d0%be%d0%b5%d0%b4%d0%b8%d0%bd%d0%b5%d0%bd%d0%b8%d1%8f">“Connection timeout” — таймаут соединения
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#dns-propagation-delay--%d0%b7%d0%b0%d0%b4%d0%b5%d1%80%d0%b6%d0%ba%d0%b0-%d1%80%d0%b0%d1%81%d0%bf%d1%80%d0%be%d1%81%d1%82%d1%80%d0%b0%d0%bd%d0%b5%d0%bd%d0%b8%d1%8f-dns">“DNS propagation delay” — задержка распространения DNS
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d1%81%d0%bd%d0%b0%d1%87%d0%b0%d0%bb%d0%b0-%d1%82%d0%b5%d1%81%d1%82%d0%b8%d1%80%d1%83%d0%b9%d1%82%d0%b5--%d0%bf%d0%be%d1%82%d0%be%d0%bc-%d0%b2%d0%bd%d0%b5%d0%b4%d1%80%d1%8f%d0%b9%d1%82%d0%b5-staging-%d1%81%d1%80%d0%b5%d0%b4%d0%b0">Сначала тестируйте — потом внедряйте: staging-среда
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d0%bf%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%b9-%d1%87%d0%b5%d0%ba-%d0%bb%d0%b8%d1%81%d1%82-%d0%b4%d0%b8%d0%b0%d0%b3%d0%bd%d0%be%d1%81%d1%82%d0%b8%d0%ba%d0%b8">Практический чек-лист диагностики
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#%d0%b7%d0%b0%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5">Заключение
+        </a>
+      </li></ul>
+      <div class="hx:mt-8 hx:border-t hx:bg-white hx:pt-8 hx:shadow-[0_-12px_16px_white] hx:dark:bg-dark hx:dark:shadow-[0_-12px_16px_#111] hx:sticky hx:bottom-0 hx:flex hx:flex-col hx:items-start hx:gap-2 hx:pb-8 hx:border-gray-200 hx:dark:border-neutral-800 hx:contrast-more:border-t hx:contrast-more:border-neutral-400 hx:contrast-more:shadow-none hx:contrast-more:dark:border-neutral-400"><div class="hx:flex hx:items-start hx:gap-x-2 hx:font-medium hx:text-xs">
+            <div class="hx:text-gray-500 hx:dark:text-gray-400 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50">Теги</div>
+            <div class="hx:flex hx:flex-wrap hx:gap-y-1">
+              <a class="hx:inline-block hx:whitespace-nowrap hx:mr-2 hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-100 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50" href="/tags/traefik/">#traefik</a><a class="hx:inline-block hx:whitespace-nowrap hx:mr-2 hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-100 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50" href="/tags/https/">#https</a><a class="hx:inline-block hx:whitespace-nowrap hx:mr-2 hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-100 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50" href="/tags/proxy/">#proxy</a><a class="hx:inline-block hx:whitespace-nowrap hx:mr-2 hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-100 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50" href="/tags/docker/">#docker</a><a class="hx:inline-block hx:whitespace-nowrap hx:mr-2 hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-100 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50" href="/tags/middlewares/">#middlewares</a>
+            </div>
+          </div>
+        <button aria-hidden="true" id="backToTop" onClick="scrollUp();" class="hx:cursor-pointer hx:transition-all hx:duration-75 hx:opacity-0 hx:text-xs hx:font-medium hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-100 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50">
+          <span>Прокрутить к началу</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hx:inline hx:ltr:ml-1 hx:rtl:mr-1 hx:h-3.5 hx:w-3.5 hx:rounded-full hx:border hx:border-gray-500 hx:hover:border-gray-900 hx:dark:border-gray-400 hx:dark:hover:border-gray-100 hx:contrast-more:border-gray-800 hx:contrast-more:dark:border-gray-50">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+
+    <article class="hx:w-full hx:break-words hx:flex hx:min-h-[calc(100vh-var(--navbar-height))] hx:min-w-0 hx:justify-center hx:pb-8 hx:pr-[calc(env(safe-area-inset-right)-1.5rem)]">
+      <main class="hx:w-full hx:min-w-0 hx:max-w-6xl hx:px-6 hx:pt-4 hx:md:px-12">
+        <div class="hx:mt-1.5 hx:flex hx:items-center hx:gap-1 hx:overflow-hidden hx:text-sm hx:text-gray-500 hx:dark:text-gray-400 hx:contrast-more:text-current">
+        <div class="hx:whitespace-nowrap hx:transition-colors hx:min-w-[24px] hx:overflow-hidden hx:text-ellipsis hx:hover:text-gray-900 hx:dark:hover:text-gray-100">
+          <a href="/traefik/">Traefik 3</a>
+        </div><svg class="hx:w-3.5 hx:shrink-0 hx:rtl:-rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg><div class="hx:whitespace-nowrap hx:transition-colors hx:font-medium hx:text-gray-700 hx:contrast-more:font-bold hx:contrast-more:text-current hx:dark:text-gray-100 hx:contrast-more:dark:text-current">3. Lets Encrypt, SSL...</div>
+  </div>
+
+        <div class="content">
+          
+          <h1>Traefik 3 и Let&rsquo;s Encrypt: Автоматические SSL-сертификаты для ваших проектов</h1><p>Раньше интернет напоминал огромный офис, где все сообщения между сотрудниками — служебная и  личная переписка, логины, пароли, другая информация — пересылались как почтовые открытки, в открытом виде: почти любой мог прочитать их содержимое. Так работает протокол HTTP.</p>
+<p>С появлением HTTPS каждое сообщение стало запечатываться в непрозрачный конверт и опечатываться сургучной печатью. Содержимое теперь недоступно посторонним. Ещё лет десять назад такие &ldquo;конверты&rdquo; (SSL-сертификаты) были дороги и использовались только для самой важной переписки. Но сегодня все изменилось.</p>
+<h2>Часть 1: Зачем вообще нужен HTTPS?<span class="hx:absolute hx:-mt-20" id="часть-1-зачем-вообще-нужен-https"></span>
+    <a href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-1-%d0%b7%d0%b0%d1%87%d0%b5%d0%bc-%d0%b2%d0%be%d0%be%d0%b1%d1%89%d0%b5-%d0%bd%d1%83%d0%b6%d0%b5%d0%bd-https" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Давайте еще раз разберёмся в важности протокола HTTPS на примере нашего офиса. Когда ваш сайт работает по HTTP, общение между браузером пользователя и вашим сервером напоминает публичное объявление, вывешенное на общей доске в коридоре. Почему &ldquo;объявление на доске в коридоре&rdquo; — это плохо?</p>
+<p>Информация доступна всем. Каждый, кто проходит мимо — будь то другой &ldquo;сотрудник&rdquo; (пользователь в той же сети) или &ldquo;служба доставки&rdquo; (провайдер), — может свободно прочитать, что там написано. Ваши логины, пароли, личные данные, фотографии — всё как на ладони.</p>
+<p>Любой может внести правки. Злоумышленник может снять ваше объявление и подменить его на своё, изменив, например, реквизиты для оплаты на свои.</p>
+<p>В начале 2000-х многие провайдеры интернета в России внедряли рекламный код с банерами в HTTP-страницы, которые запрашивали пользователи. Владелец сайта даже не знал, что на его страницах показывается реклама. А пользователь даже не догадывался, что владелец сайта не имеет никакого отношения к рекламе.</p>
+<p>Никакой конфиденциальности. Вы не знаете, кто и сколько раз прочитал ваше объявление по дороге к адресату, кто его и как изменил.</p>
+<p>HTTPS — это полная противоположность. Это как тоже самое объявление (ну или письмо), упакованное в непрозрачный конверт, опечатанное и переданное непосредственно в руки получателю.</p>
+<p>Какие преимущества дает такое &ldquo;упакованное и опечатанное письмо&rdquo;?</p>
+<ul>
+<li>
+<p>Конфиденциальность. Содержимое конверта надёжно зашифровано. Даже если его перехватят, прочитать без специального ключа будет невозможно. Это как текст, написанный шифром, известным только вам и вашему адресату.</p>
+</li>
+<li>
+<p>Целостность. Конверт опечатан сургучной печатью. Если его вскрыть по дороге, получатель сразу это заметит. Это гарантирует, что информация не была подменена.</p>
+</li>
+<li>
+<p>Подлинность. Зелёный замочек в адресной строке браузера — это и есть та самая «печать доверия». Она подтверждает, что &ldquo;письмо&rdquo; поступило именно из вашего офиса (вашего сервера), а не от мошенника, который притворяется вами.</p>
+</li>
+</ul>
+<p>Проще говоря: HTTP оставляет ваши данные на всеобщем обозрении, как объявление на доске. HTTPS - надёжно упаковывает их в защищённый конверт, обеспечивая приватность и безопасность. И теперь, благодаря Let&rsquo;s Encrypt и Traefik, использовать такие &ldquo;конверты&rdquo; стало бесплатно, быстро и на автомате.</p>
+<h2>Часть 2: Let&rsquo;s Encrypt — революция доступности<span class="hx:absolute hx:-mt-20" id="часть-2-lets-encrypt--революция-доступности"></span>
+    <a href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-2-lets-encrypt--%d1%80%d0%b5%d0%b2%d0%be%d0%bb%d1%8e%d1%86%d0%b8%d1%8f-%d0%b4%d0%be%d1%81%d1%82%d1%83%d0%bf%d0%bd%d0%be%d1%81%d1%82%d0%b8" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Раньше оформление SSL-сертификата чем то напоминало получение загранпаспорта: долгая процедура, горы документов, высокая стоимость — и всё это всего на год. Такая сложность делала защищённое соединение роскошью, доступной только крупным компаниям или проектам с серьёзным бюджетом.</p>
+<p>Let’s Encrypt — это некоммерческая организация, основанная в 2014 году при поддержке таких гигантов, как Mozilla, Cisco, Akamai и Electronic Frontier Foundation. Её миссия — сделать интернет безопаснее, предоставив каждому возможность бесплатно и автоматически получать SSL-сертификаты. Благодаря открытой инфраструктуре и автоматизации процесс выдачи сертификата теперь занимает секунды, а не недели, и не требует ручного подтверждения или оплаты. Сегодня Let’s Encrypt — один из крупнейших центров сертификации в мире, обеспечивающий защиту миллионов сайтов.</p>
+<p>Если в 2-х словах, то вот преимущества использования Let’s Encrypt:</p>
+<ul>
+<li>Бесплатно: $0.00. Навсегда.</li>
+<li>Автоматически: Traefik сам обратится в Let’s Encrypt, получит или продлит сертификат.</li>
+<li>Настоящий: Это не какие-то &ldquo;учебные&rdquo; или ненастоящие сертификаты, а полноценные, которые работают в продакшене.</li>
+<li>Срочный: Действует 90 дней, но Traefik будет автоматически продлевать его, так что вам об этом не придётся думать.</li>
+</ul>
+<h2>Часть 3: Certificates Resolvers — наш специалист по пропускам<span class="hx:absolute hx:-mt-20" id="часть-3-certificates-resolvers--наш-специалист-по-пропускам"></span>
+    <a href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-3-certificates-resolvers--%d0%bd%d0%b0%d1%88-%d1%81%d0%bf%d0%b5%d1%86%d0%b8%d0%b0%d0%bb%d0%b8%d1%81%d1%82-%d0%bf%d0%be-%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba%d0%b0%d0%bc" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Теперь, когда мы поняли разницу между «объявлением на доске» и «запечатанным письмом» (протоколами HTTP и HTTPS), давайте посмотрим, кто же в нашем офисе отвечает за всю эту систему безопасности. Если HTTPS — это защищённые конверты, то Traefik — это главный курьер, который их доставляет. А его специальный помощник, Certificates Resolver, — это тот самый сотрудник, который получает конверты и печати для этих конвертов в центральном бюро Let&rsquo;s Encrypt и это его главная задача — обращаться в бюро, подтверждать наши права и получать готовые сертификаты.</p>
+<h3>Как работает Certificates Resolver?<span class="hx:absolute hx:-mt-20" id="как-работает-certificates-resolver"></span>
+    <a href="#%d0%ba%d0%b0%d0%ba-%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%b0%d0%b5%d1%82-certificates-resolver" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Каждый раз, когда к Traefik поступает запрос на новый домен (например, app.yourdomain.com), он проверяет: есть ли у него уже готовый защищённый конверт (сертификат) для этого адресата? Если нет — он поручает своему помощнику (Certificates Resolver) его оформить.</p>
+<p>Процесс выглядит так:</p>
+<ol>
+<li>
+<p>Запрос: Traefik говорит помощнику: &ldquo;Мне нужен сертификат для app.yourdomain.com&rdquo;.</p>
+</li>
+<li>
+<p>Обращение в бюро: Помощник связывается с бюро Let&rsquo;s Encrypt по протоколу ACME  для автоматического получения сертификата.</p>
+</li>
+<li>
+<p>Прохождение проверки: Let&rsquo;s Encrypt выдаёт &ldquo;челлендж&rdquo; — задание, которое подтвердит, что мы владеем доменом (как именно, рассмотрим в Части 4).</p>
+</li>
+<li>
+<p>Получение и хранение: После успешной проверки Let&rsquo;s Encrypt высылает готовый сертификат. Помощник не только получает его, но и сохраняет в специальном файле-хранилище (storage).</p>
+</li>
+<li>
+<p>Автопродление: У помощника есть календарь. Он следит за сроком действия каждого выданного конверта (помните, они действуют 90 дней?) и заблаговременно, автоматически продлевает его, без нашего участия.</p>
+</li>
+</ol>
+<p>Базовая настройка в traefik.yml:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># traefik.yml - &#34;Единая инструкция для швейцара и его помощников&#34;</span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span><span style="color:#f92672">certificatesResolvers</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">letsencrypt</span>:                       <span style="color:#75715e"># Имя нашего специалиста (можете выбрать своё)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">acme</span>:                            <span style="color:#75715e"># Говорим, что он будет работать по протоколу ACME</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">email</span>: <span style="color:#ae81ff">admin@yourdomain.com   </span> <span style="color:#75715e"># &#34;Ваша служебная почта для уведомлений от бюро&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">/letsencrypt/acme.json</span> <span style="color:#75715e"># &#34;Ключевой параметр: файл-сейф для хранения всех пропусков&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Важные технические детали:</p>
+<p><code>email</code> - Обязательный параметр. Let&rsquo;s Encrypt пришлёт на него уведомление об истечении срока действия сертификата, если автоматическое продление по какой-то причине не сработает. Это ваша &ldquo;страховка&rdquo; на случай непредвиденных обстоятельств.</p>
+<p><code>storage</code> - Очень важный параметр. Это путь к файлу, где будут храниться все ваши сертификаты и приватные ключи. Этот файл необходимо сохранять между перезапусками Traefik (например, монтировать как volume в Docker). Без него при каждом перезапуске Traefik будет пытаться запрашивать новые сертификаты, что быстро исчерпает лимиты Let&rsquo;s Encrypt.</p>
+<p>По сути, Certificates Resolver — это &ldquo;сердце&rdquo; автоматического управления SSL в Traefik. Он превращает одноразовую сложную процедуру в постоянный, невидимый и бесплатный фоновый процесс. Далее мы посмотрим, какие именно &ldquo;испытания&rdquo; (челленджи) ему приходится проходить для доказательства прав на домен.</p>
+<h2>Часть 4: ACME челленджи — подтверждаем, что мы хозяева<span class="hx:absolute hx:-mt-20" id="часть-4-acme-челленджи--подтверждаем-что-мы-хозяева"></span>
+    <a href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-4-acme-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6%d0%b8--%d0%bf%d0%be%d0%b4%d1%82%d0%b2%d0%b5%d1%80%d0%b6%d0%b4%d0%b0%d0%b5%d0%bc-%d1%87%d1%82%d0%be-%d0%bc%d1%8b-%d1%85%d0%be%d0%b7%d1%8f%d0%b5%d0%b2%d0%b0" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>ACME (Automatic Certificate Management Environment) — это открытый протокол, разработанный Internet Security Research Group (ISRG), организацией, стоящей за Let’s Encrypt, и стандартизированный IETF в <a href="https://datatracker.ietf.org/doc/html/rfc8555"target="_blank" rel="noopener">RFC 8555</a> для автоматизации процесса получения, обновления и отзыва SSL/TLS-сертификатов. Он позволяет серверам и приложениям взаимодействовать с центрами сертификации (например, Let’s Encrypt) без ручного участия, используя стандартные API-запросы и процедуры проверки владения доменом (челленджи). Благодаря ACME выдача сертификатов стала быстрой, надёжной и доступной для автоматизации, что значительно упростило внедрение HTTPS на миллионах сайтов.</p>
+<p>Перед выдачей сертификата Let’s Encrypt необходимо убедиться, что вы действительно управляете запрашиваемым доменом. Для этого используется процедура проверки, которая называется ACME-челлендж (от англ. challenge — «вызов»). Это как проверка документов перед выдачей пропуска: без подтверждения прав владения сертификат не будет выдан.</p>
+<p>Существует несколько видов челленджей, но наиболее распространённые — <code>HTTP-01</code> и <code>DNS-01</code>. <code>HTTP-01</code> требует разместить специальный файл на веб-сервере по определённому адресу, что подтверждает контроль над сайтом. <code>DNS-01</code> предполагает добавление особой <code>TXT</code>-записи в DNS домена, что удобно для доменов без работающего веб-сервера или при использовании wildcard-сертификатов. Оба метода автоматизированы и поддерживаются большинством современных инструментов, включая Traefik.</p>
+<p>Помимо популярных методов проверки владения доменом — <code>HTTP-01</code> и <code>DNS-01</code> — в протоколе ACME существует ещё один способ: <code>TLS-ALPN-01</code>. Этот челлендж использует расширение протокола TLS (ALPN) для подтверждения контроля над доменом. Он актуален в случаях, когда веб-сервер не может обрабатывать HTTP-запросы (например, если сайт работает только по HTTPS, а порт 80 закрыт) или когда требуется более надёжная проверка без изменения DNS-записей. Однако TLS-ALPN-01 поддерживается не всеми центрами сертификации и требует специальной настройки сервера, поэтому применяется реже, чем стандартные методы.</p>
+<h3>HTTP-челлендж — &ldquo;проверка на месте&rdquo;<span class="hx:absolute hx:-mt-20" id="http-челлендж--проверка-на-месте"></span>
+    <a href="#http-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6--%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0-%d0%bd%d0%b0-%d0%bc%d0%b5%d1%81%d1%82%d0%b5" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Вот как это работает: проверяющий из Let&rsquo;s Encrypt приходит по адресу yourdomain.com и просит показать специальный документ с секретным кодом. Traefik заранее готовит этот документ и кладёт его по строго определённому адресу. Если проверяющий его находит — вы доказали право собственности.</p>
+<p>Плюс HTTP-челленджа - очень просто настроить.</p>
+<p>Минус - нужен белый IP-адрес и открытый 80-й порт.</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">httpChallenge</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">entryPoint</span>: <span style="color:#ae81ff">web </span> <span style="color:#75715e"># &#34;Дверь (80 порт), через которую придет проверяющий&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<h3>DNS-челлендж — &ldquo;проверка через справочную&rdquo;<span class="hx:absolute hx:-mt-20" id="dns-челлендж--проверка-через-справочную"></span>
+    <a href="#dns-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6--%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0-%d1%87%d0%b5%d1%80%d0%b5%d0%b7-%d1%81%d0%bf%d1%80%d0%b0%d0%b2%d0%be%d1%87%d0%bd%d1%83%d1%8e" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>В этом случае проверяющий не приходит к вам, а звонит в DNS-справочную (где прописаны все адреса интернета) и спрашивает: &ldquo;А правда, что у этого домена есть такая-то секретная запись?&rdquo;. Traefik сам добавляет эту временную запись через API вашего DNS-провайдера.</p>
+<p>Плюсы DNS-челленджа - работает где угодно (даже за NAT), позволяет делать wildcard-сертификаты.</p>
+<p>Минусы - требует доступа к API вашего DNS-хостинга (Cloudflare, Яндекс.Облако и т.д.). Не все DNS-провайдеры предоставляют API для управления DNS записями ваших доменов.</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">dnsChallenge</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">provider</span>: <span style="color:#ae81ff">cloudflare </span> <span style="color:#75715e"># &#34;Какую справочную использовать?&#34; </span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">delayBeforeCheck</span>: <span style="color:#ae81ff">30</span>  <span style="color:#75715e"># &#34;Даем справочной время на обновление информации (в секундах)&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<h2>Часть 5: Практика — настраиваем HTTP-челлендж<span class="hx:absolute hx:-mt-20" id="часть-5-практика--настраиваем-http-челлендж"></span>
+    <a href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-5-%d0%bf%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0--%d0%bd%d0%b0%d1%81%d1%82%d1%80%d0%b0%d0%b8%d0%b2%d0%b0%d0%b5%d0%bc-http-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Теперь, когда мы разобрались с принципами работы Let’s Encrypt, разобрались с ACME-протоколом и основными видами челленджей, можно переходить к практике. Все необходимые теоретические основы уже заложены — осталось только применить их на деле.</p>
+<p>Ниже приведена готовая статическая конфигурация <code>traefik.yml</code>, которая автоматизирует получение и обновление SSL-сертификатов.</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># traefik.yml - &#34;Единая инструкция для швейцара Traefik&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">entryPoints</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">web</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">address</span>: <span style="color:#e6db74">&#34;:80&#34;</span>      <span style="color:#75715e"># &#34;Дверь №1&#34; для гостей без пропусков (HTTP)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">websecure</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">address</span>: <span style="color:#e6db74">&#34;:443&#34;</span>     <span style="color:#75715e"># &#34;Дверь №2&#34; для гостей с пропусками (HTTPS)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">api</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">dashboard</span>: <span style="color:#66d9ef">true</span>       <span style="color:#75715e"># Включаем панель управления для швейцара</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">insecure</span>: <span style="color:#66d9ef">true</span>        <span style="color:#75715e"># Разрешаем заходить на панель без пропуска (только для тестов! В продакшене - отключить!)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">providers</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">docker</span>: 
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">endpoint</span>: <span style="color:#e6db74">&#34;unix:///var/run/docker.sock&#34;</span>  <span style="color:#75715e"># Слушаем уведомления от Docker</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">exposedByDefault</span>: <span style="color:#66d9ef">false</span>                  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">certificatesResolvers</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">letsencrypt</span>:                         <span style="color:#75715e"># &#34;Наш специалист по пропускам&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">acme</span>:                              <span style="color:#75715e"># Протокол</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">email</span>: <span style="color:#ae81ff">admin@yourdomain.com     </span> <span style="color:#75715e"># Ваша служебная почта</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">/letsencrypt/acme.json </span> <span style="color:#75715e"># Хранилище</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">httpChallenge</span>:                   <span style="color:#75715e"># Будем использовать HTTP-челлендж</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">entryPoint</span>: <span style="color:#ae81ff">web               </span> <span style="color:#75715e"># Через какую &#34;дверь&#34; проводить проверку</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<h2>Часть 6: Практика — подключаем автоматический SSL к сервису<span class="hx:absolute hx:-mt-20" id="часть-6-практика--подключаем-автоматический-ssl-к-сервису"></span>
+    <a href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-6-%d0%bf%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0--%d0%bf%d0%be%d0%b4%d0%ba%d0%bb%d1%8e%d1%87%d0%b0%d0%b5%d0%bc-%d0%b0%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%b9-ssl-%d0%ba-%d1%81%d0%b5%d1%80%d0%b2%d0%b8%d1%81%d1%83" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Теперь покажем швейцару, для какого именно &ldquo;офиса&rdquo; (контейнера) нужно получить пропуск. Делается это через метки (labels) в <code>docker-compose.yml</code>.</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># docker-compose.yml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">traefik</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">traefik:v3.0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;80:80&#34;</span>      <span style="color:#75715e"># Открываем дверь для гостей и проверок</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;443:443&#34;</span>    <span style="color:#75715e"># Открываем дверь для VIP-гостей с пропусками</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;8080:8080&#34;</span>  <span style="color:#75715e"># Панель управления (ТОЛЬКО ДЛЯ ТЕСТОВ!)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">/var/run/docker.sock:/var/run/docker.sock </span> <span style="color:#75715e"># Слушаем Docker</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">./traefik.yml:/etc/traefik/traefik.yml    </span> <span style="color:#75715e"># Основная конфигурация (инструкции швейцару)</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">./letsencrypt:/letsencrypt                </span> <span style="color:#75715e"># Папка для хранения сертификатов</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">my-web-app</span>: <span style="color:#75715e"># Ваш веб-проект, например, сайт на Nginx</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">nginx:latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Включаем швейцара для этого офиса</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.enable=true&#34;</span>
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Говорим швейцару: гости идут на адрес &#39;app.yourdomain.com&#39;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.my-web-app.rule=Host(`app.yourdomain.com`)&#34;</span>
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Говорим: постоянных гостей с пропусками веди через дверь websecure (443 порт)</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.my-web-app.entrypoints=websecure&#34;</span>
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># И главное: скажи специалисту по &#39;letsencrypt&#39; сделать для них пропуск!</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.my-web-app.tls.certresolver=letsencrypt&#34;</span>
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># А новых гостей без пропуска (HTTP) автоматически переводи на дверь с пропуском (HTTPS)</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.my-web-app-http.rule=Host(`app.yourdomain.com`)&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.my-web-app-http.entrypoints=web&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.my-web-app-http.middlewares=redirect-to-https&#34;</span>
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Middleware redirect-to-https — это помощник швейцара, который делает перенаправление</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Его лучше объявить в отдельном файле динамической конфигурации Traefik, но для простоты</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># пусть будет здесь. В Docker Compose можно объявить, применив метку к самому сервису Traefik:</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># traefik:</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">#   ...</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">#   labels:</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">#     - &#34;traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Запустите <code>docker-compose up -d</code>, и через несколько минут ваш сайт <code>app.yourdomain.com</code> будет доступен по HTTPS с зеленым замочком! Все передаваемые на него и с него данные будут зашифрованы и подписаны, каким-либо образом изменить или подменить их не получится.</p>
+<h2>Часть 7: Wildcard сертификаты — пропуск на весь офисный комплекс<span class="hx:absolute hx:-mt-20" id="часть-7-wildcard-сертификаты--пропуск-на-весь-офисный-комплекс"></span>
+    <a href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-7-wildcard-%d1%81%d0%b5%d1%80%d1%82%d0%b8%d1%84%d0%b8%d0%ba%d0%b0%d1%82%d1%8b--%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba-%d0%bd%d0%b0-%d0%b2%d0%b5%d1%81%d1%8c-%d0%be%d1%84%d0%b8%d1%81%d0%bd%d1%8b%d0%b9-%d0%ba%d0%be%d0%bc%d0%bf%d0%bb%d0%b5%d0%ba%d1%81" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Когда у вас не один сайт, а целая сеть поддоменов — например, <code>app.yourdomain.com</code>, <code>api.yourdomain.com</code>, <code>admin.yourdomain.com</code> — оформлять отдельный SSL-сертификат для каждого из них становится неудобно и ресурсозатратно. Представьте, что вам нужно получать пропуск на каждый подъезд большого офисного комплекса: это отнимает время, требует дополнительных проверок и усложняет управление. В таких случаях на помощь приходит <code>wildcard</code>-сертификат — универсальное решение, которое покрывает все поддомены сразу.</p>
+<p><code>Wildcard</code>-сертификат действует как единый пропуск на весь комплекс: он защищает не только основной домен (<code>yourdomain.com</code>), но и все его поддомены (<code>*.yourdomain.com</code>). Это значит, что вы можете добавлять новые поддомены — например, <code>blog.yourdomain.com</code> или <code>shop.yourdomain.com</code> — и они автоматически будут защищены тем же сертификатом, без необходимости оформлять его заново. Такой подход экономит время, упрощает администрирование и снижает риск ошибок при настройке безопасности.</p>
+<p><strong>Однако есть важное ограничение</strong>: <code>wildcard</code>-сертификат от Let’s Encrypt можно получить <em><strong>только через DNS-челлендж</strong></em>! Это означает, что для подтверждения владения доменом вам потребуется добавить специальную <code>TXT</code>-запись в DNS-зону вашего домена. Такой метод проверки считается более надёжным, чем HTTP-челлендж, и позволяет избежать проблем с подтверждением прав на поддомены, которые ещё не настроены или не имеют работающего веб-сервера.</p>
+<h3>1. Настройка DNS-челленджа и получение wildcard-сертификатов<span class="hx:absolute hx:-mt-20" id="1-настройка-dns-челленджа-и-получение-wildcard-сертификатов"></span>
+    <a href="#1-%d0%bd%d0%b0%d1%81%d1%82%d1%80%d0%be%d0%b9%d0%ba%d0%b0-dns-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6%d0%b0-%d0%b8-%d0%bf%d0%be%d0%bb%d1%83%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-wildcard-%d1%81%d0%b5%d1%80%d1%82%d0%b8%d1%84%d0%b8%d0%ba%d0%b0%d1%82%d0%be%d0%b2" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Дополним нашего специалиста по пропускам в <code>traefik.yml</code>:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># traefik.yml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">certificatesResolvers</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">letsencrypt-dns</span>:                    <span style="color:#75715e"># Новый специалист для работы с реестром</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">acme</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">email</span>: <span style="color:#ae81ff">admin@yourdomain.com</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">/letsencrypt/acme-dns.json </span> <span style="color:#75715e"># Отдельный файл для wildcard-сертификатов</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">dnsChallenge</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">provider</span>: <span style="color:#ae81ff">cloudflare         </span> <span style="color:#75715e"># &#34;С каким реестром работаем?&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">delayBeforeCheck</span>: <span style="color:#ae81ff">30</span>          <span style="color:#75715e"># &#34;Даем время на внесение записей в реестр&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Здесь, для примера, мы используем DNS-провайдера Cloudflare. Для своей работы Cloudflare требуется передать некоторые параметры (e-mail, token). Как это сделать?</p>
+<p>Через переменные окружения в <code>docker-compose.yml</code>:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">traefik</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">traefik:v3.6</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># ... остальные настройки</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;CF_API_EMAIL=your-email@domain.com&#34;</span>          <span style="color:#75715e"># Логин для Cloudflare</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;CF_API_KEY=your-global-api-key&#34;</span>              <span style="color:#75715e"># Token для доступа к реестру</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Указываем, что для этого домена нужен wildcard-сертификат</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.web.tls.certresolver=letsencrypt-dns&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.web.tls.domains[0].main=yourdomain.com&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.web.tls.domains[0].sans=*.yourdomain.com&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Разберем каждую строчку подробно:</p>
+<p><code>traefik.http.routers.web.tls.certresolver=letsencrypt-dns</code> — указывает, какой именно &ldquo;специалист по пропускам&rdquo; будет заниматься этим сертификатом. Мы создали его выше с DNS-челленджем.</p>
+<p><code>traefik.http.routers.web.tls.domains[0].main=yourdomain.com</code> — определяет основной домен. Это &ldquo;главный офис&rdquo;, для которого выдается удостоверение.</p>
+<p><code>traefik.http.routers.web.tls.domains[0].sans=*.yourdomain.com</code> — самая важная часть. Параметр sans (Subject Alternative Names) указывает дополнительные имена, которые тоже должны защищаться этим сертификатом. Звездочка * означает &ldquo;любой поддомен&rdquo;.</p>
+<p>Что происходит &ldquo;под капотом&rdquo;:</p>
+<ol>
+<li>Traefik говорит Let&rsquo;s Encrypt: &ldquo;Хочу удостоверение для *.yourdomain.com&rdquo; (wildcard-сертификат)</li>
+<li>Let&rsquo;s Encrypt отвечает: &ldquo;Добавь в DNS <code>TXT</code>-запись для поддомена <code>_acme-challenge.yourdomain.com</code> со значением <code>секретный-код</code>&rdquo;</li>
+<li>Traefik через API Cloudflare автоматически добавляет эту запись</li>
+<li>Let&rsquo;s Encrypt проверяет, что запись появилась, и выдает сертификат</li>
+<li>Traefik удаляет временную DNS-запись</li>
+</ol>
+<p>Где взять учетные данные?</p>
+<p>У вашего DNS-провайдера (Reg.ru, Timeweb, Cloudflare и др.) в панели управления нужно создать API-токен с правами на изменение DNS-записей. Полный список поддерживаемых провайдеров можно посмотреть <a href="https://go-acme.github.io/lego/dns/"target="_blank" rel="noopener">здесь</a>. В списке присутствуют и российские провайдеры DNS, к примеру - Selectel, Timeweb Cloud, Yandex 360, Yandex Cloud, webnames.ru, RU CENTER, reg.ru и другие. Там же приведены переменные окружения, которые нужны для работы с API этих провайдеров.</p>
+<h3>2. DNS-челлендж для отдельных поддоменов — персональные пропуска для каждого отдела<span class="hx:absolute hx:-mt-20" id="2-dns-челлендж-для-отдельных-поддоменов--персональные-пропуска-для-каждого-отдела"></span>
+    <a href="#2-dns-%d1%87%d0%b5%d0%bb%d0%bb%d0%b5%d0%bd%d0%b4%d0%b6-%d0%b4%d0%bb%d1%8f-%d0%be%d1%82%d0%b4%d0%b5%d0%bb%d1%8c%d0%bd%d1%8b%d1%85-%d0%bf%d0%be%d0%b4%d0%b4%d0%be%d0%bc%d0%b5%d0%bd%d0%be%d0%b2--%d0%bf%d0%b5%d1%80%d1%81%d0%be%d0%bd%d0%b0%d0%bb%d1%8c%d0%bd%d1%8b%d0%b5-%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba%d0%b0-%d0%b4%d0%bb%d1%8f-%d0%ba%d0%b0%d0%b6%d0%b4%d0%be%d0%b3%d0%be-%d0%be%d1%82%d0%b4%d0%b5%d0%bb%d0%b0" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Бывают случаи, когда <code>wildcard</code>-сертификат — это избыточно, или вы хотите разделить ответственность между разными проектами. В этом случае можно использовать DNS-челлендж для получения отдельных сертификатов на каждый поддомен.</p>
+<p>Когда это может быть полезно? Ну, к примеру, когда у вас 2-3 стабильных поддомена, которые не меняются. Или Вы хотите изолировать сертификаты для разных проектов. Или требования вашей организации по безопасности запрещают использовать wildcard-сертификаты.</p>
+<p>Рассмотрим настройку для отдельных поддоменов при использовании DNS-челленджа. Конфигурация Traefik остаётся практически такой же, как для wildcard, но в метках сервисов мы указываем конкретные домены без звёздочки:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">web-app</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">nginx:latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.enable=true&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Указываем конкретный поддомен для приложения</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.web-app.rule=Host(`app.yourdomain.com`)&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.web-app.entrypoints=websecure&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Используем DNS-челлендж для этого конкретного домена</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.web-app.tls.certresolver=letsencrypt-dns&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">api-service</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">your-api:latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.enable=true&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Другой поддомен для API</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.api.rule=Host(`api.yourdomain.com`)&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.api.entrypoints=websecure&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Тот же резолвер, но для другого домена</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.api.tls.certresolver=letsencrypt-dns&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">admin-panel</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">admin:latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.enable=true&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># И ещё один поддомен</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.admin.rule=Host(`admin.yourdomain.com`)&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.admin.entrypoints=websecure&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;traefik.http.routers.admin.tls.certresolver=letsencrypt-dns&#34;</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Что изменится в процессе получения сертификатов?</p>
+<p>Для каждого поддомена будет выполнена своя проверка:</p>
+<ul>
+<li>Для app.yourdomain.com создается запись _acme-challenge.app.yourdomain.com</li>
+<li>Для api.yourdomain.com создается запись _acme-challenge.api.yourdomain.com</li>
+<li>Для admin.yourdomain.com создается запись _acme-challenge.admin.yourdomain.com</li>
+</ul>
+<p>Будут получены отдельные сертификаты для поддоменов:</p>
+<ul>
+<li>Каждый сервис получает свой собственный сертификат</li>
+<li>В папке storage будут храниться три разных сертификата</li>
+<li>Обновление каждого сертификата происходит независимо</li>
+</ul>
+<p>Использование отдельных сертификатов для каждого поддомена имеет свои сильные и слабые стороны. С точки зрения безопасности такой подход более надёжен: компрометация одного сертификата не затрагивает остальные поддомены, что минимизирует потенциальные риски. Он также обеспечивает гибкость — можно свободно выбирать разных DNS-провайдеров для разных поддоменов, а контроль над сертификатами становится точнее, поскольку всегда известно, для каких именно адресов они выданы.</p>
+<p>Однако у этого метода есть и недостатки. Каждый сертификат требует отдельного запроса к API DNS-провайдера, что увеличивает нагрузку на систему. Кроме того, управление несколькими сертификатами вместо одного усложняет администрирование, особенно если поддоменов много. Поэтому такой подход лучше применять, когда количество поддоменов невелико и они стабильны. Если же поддомены создаются динамически или их число постоянно растёт, удобнее использовать wildcard-сертификат</p>
+<h2>Часть 8: Типичные проблемы и решения — что делать, когда проверка застопорилась<span class="hx:absolute hx:-mt-20" id="часть-8-типичные-проблемы-и-решения--что-делать-когда-проверка-застопорилась"></span>
+    <a href="#%d1%87%d0%b0%d1%81%d1%82%d1%8c-8-%d1%82%d0%b8%d0%bf%d0%b8%d1%87%d0%bd%d1%8b%d0%b5-%d0%bf%d1%80%d0%be%d0%b1%d0%bb%d0%b5%d0%bc%d1%8b-%d0%b8-%d1%80%d0%b5%d1%88%d0%b5%d0%bd%d0%b8%d1%8f--%d1%87%d1%82%d0%be-%d0%b4%d0%b5%d0%bb%d0%b0%d1%82%d1%8c-%d0%ba%d0%be%d0%b3%d0%b4%d0%b0-%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0-%d0%b7%d0%b0%d1%81%d1%82%d0%be%d0%bf%d0%be%d1%80%d0%b8%d0%bb%d0%b0%d1%81%d1%8c" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Даже в нашей отлаженной системе офисного центра иногда случаются накладки. Вот самые частые проблемы и способы их решения.</p>
+<h3>&ldquo;Rate limit exceeded&rdquo; — слишком много заявок на пропуска<span class="hx:absolute hx:-mt-20" id="rate-limit-exceeded--слишком-много-заявок-на-пропуска"></span>
+    <a href="#rate-limit-exceeded--%d1%81%d0%bb%d0%b8%d1%88%d0%ba%d0%be%d0%bc-%d0%bc%d0%bd%d0%be%d0%b3%d0%be-%d0%b7%d0%b0%d1%8f%d0%b2%d0%be%d0%ba-%d0%bd%d0%b0-%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%81%d0%ba%d0%b0" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p><em><strong>Для каких челленджей: HTTP и DNS</strong></em></p>
+<p>Аналогия: Вы замучили бюро пропусков своими заявками — они временно отказали вам в обслуживании.</p>
+<p>Техническое объяснение: Let&rsquo;s Encrypt имеет жёсткие лимиты на количество запросов сертификатов для одного домена. Основные лимиты:</p>
+<ul>
+<li>50 сертификатов в сутки на один домен</li>
+<li>5 неудачных попыток в час</li>
+<li>300 запросов на аккаунт в 3 часа</li>
+</ul>
+<p>Решение:</p>
+<ul>
+<li>Подождите — большинство лимитов сбрасываются через неделю</li>
+<li>Используйте staging-среду для тестирования конфигурации (см. ниже)</li>
+</ul>
+<h3>&ldquo;Challenge failed&rdquo; — проверка не пройдена<span class="hx:absolute hx:-mt-20" id="challenge-failed--проверка-не-пройдена"></span>
+    <a href="#challenge-failed--%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0-%d0%bd%d0%b5-%d0%bf%d1%80%d0%be%d0%b9%d0%b4%d0%b5%d0%bd%d0%b0" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p><em><strong>Для каких челленджей: HTTP и DNS</strong></em></p>
+<p><strong>Для HTTP-челленджа:</strong></p>
+<p>Проблема: Let&rsquo;s Encrypt не может получить доступ к вашему сайту по 80 порту.</p>
+<p>Проверьте:</p>
+<ul>
+<li>Домен действительно указывает на ваш IP-адрес</li>
+<li>80 порт открыт и не блокируется фаерволом</li>
+<li>Traefik корректно настроен на entryPoint &ldquo;web&rdquo;</li>
+</ul>
+<p><strong>Для DNS-челленджа:</strong></p>
+<p>Проблема: Let&rsquo;s Encrypt не видит нужную TXT-запись в DNS.</p>
+<p>Проверьте:</p>
+<ul>
+<li>API-ключи вашего DNS-провайдера введены правильно</li>
+<li>Задержка delayBeforeCheck достаточно большая (30-60 секунд)</li>
+<li>TXT-запись действительно появляется при запросе через dig TXT _acme-challenge.yourdomain.com</li>
+</ul>
+<h3>&ldquo;Connection timeout&rdquo; — таймаут соединения<span class="hx:absolute hx:-mt-20" id="connection-timeout--таймаут-соединения"></span>
+    <a href="#connection-timeout--%d1%82%d0%b0%d0%b9%d0%bc%d0%b0%d1%83%d1%82-%d1%81%d0%be%d0%b5%d0%b4%d0%b8%d0%bd%d0%b5%d0%bd%d0%b8%d1%8f" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p><em><strong>Для каких челленджей: В основном HTTP</strong></em></p>
+<p>Проблема: Let&rsquo;s Encrypt не может достучаться до вашего сервера.</p>
+<p>Возможные причины:</p>
+<ul>
+<li>Фаервол блокирует 80 порт</li>
+<li>Провайдер блокирует входящие соединения на 80 порт</li>
+<li>Проблемы с маршрутизацией</li>
+</ul>
+<h3>&ldquo;DNS propagation delay&rdquo; — задержка распространения DNS<span class="hx:absolute hx:-mt-20" id="dns-propagation-delay--задержка-распространения-dns"></span>
+    <a href="#dns-propagation-delay--%d0%b7%d0%b0%d0%b4%d0%b5%d1%80%d0%b6%d0%ba%d0%b0-%d1%80%d0%b0%d1%81%d0%bf%d1%80%d0%be%d1%81%d1%82%d1%80%d0%b0%d0%bd%d0%b5%d0%bd%d0%b8%d1%8f-dns" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p><em><strong>Для каких челленджей: DNS-челлендж</strong></em></p>
+<p>Проблема: TXT-запись добавлена, но ещё не распространилась по всему миру.</p>
+<p>Решение: Увеличьте delayBeforeCheck до 60-120 секунд.</p>
+<h3>Сначала тестируйте — потом внедряйте: staging-среда<span class="hx:absolute hx:-mt-20" id="сначала-тестируйте--потом-внедряйте-staging-среда"></span>
+    <a href="#%d1%81%d0%bd%d0%b0%d1%87%d0%b0%d0%bb%d0%b0-%d1%82%d0%b5%d1%81%d1%82%d0%b8%d1%80%d1%83%d0%b9%d1%82%d0%b5--%d0%bf%d0%be%d1%82%d0%be%d0%bc-%d0%b2%d0%bd%d0%b5%d0%b4%d1%80%d1%8f%d0%b9%d1%82%d0%b5-staging-%d1%81%d1%80%d0%b5%d0%b4%d0%b0" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Зачем это нужно: Let&rsquo;s Encrypt предоставляет тестовый сервер без лимитов на запросы, где вы можете отладить всю конфигурацию, не рискуя попасть в бан.</p>
+<p>Как использовать: Просто укажите в резолвере тестовый сервер:</p>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">certificatesResolvers</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">letsencrypt-staging</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">acme</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Используем тестовое бюро пропусков</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">caServer</span>: <span style="color:#ae81ff">https://acme-staging-v02.api.letsencrypt.org/directory</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">email</span>: <span style="color:#ae81ff">your-email@example.com</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">/letsencrypt/staging.json </span> <span style="color:#75715e"># Храним отдельно от боевых</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">httpChallenge</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">entryPoint</span>: <span style="color:#ae81ff">web</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p>Важные отличия staging-сертификатов, полученных таким способом:</p>
+<ul>
+<li>Браузеры показывают их как небезопасные (это нормально!)</li>
+<li>Действуют те же 90 дней, но лимитов нет</li>
+<li>Идеально для тестирования и отладки</li>
+</ul>
+<h3>Практический чек-лист диагностики<span class="hx:absolute hx:-mt-20" id="практический-чек-лист-диагностики"></span>
+    <a href="#%d0%bf%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%b9-%d1%87%d0%b5%d0%ba-%d0%bb%d0%b8%d1%81%d1%82-%d0%b4%d0%b8%d0%b0%d0%b3%d0%bd%d0%be%d1%81%d1%82%d0%b8%d0%ba%d0%b8" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Что еще можно сделать для диагностики проблем? Каждая проблема решается по-своему, но вот небольшой чек-лист, который может помочь в поиске причин и решения возникших проблем.</p>
+<ol>
+<li>Проверьте логи Traefik</li>
+</ol>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker logs traefik-container-name</span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<ol start="2">
+<li>Убедитесь, что домен резолвится правильно</li>
+</ol>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nslookup yourdomain.com</span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<ol start="3">
+<li>Для HTTP-челленджа проверьте доступность</li>
+</ol>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl http://yourdomain.com/.well-known/acme-challenge/test</span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<ol start="4">
+<li>Для DNS-челленджа проверьте TXT-запись:</li>
+</ol>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>dig TXT _acme-challenge.yourdomain.com</span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<ol start="5">
+<li>Проверьте, открыт ли 80 порт:</li>
+</ol>
+<div class="hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code">
+
+<div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>telnet yourdomain.com <span style="color:#ae81ff">80</span></span></span></code></pre></div></div><div class="hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0">
+  <button
+    class="hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50"
+    title="Скопировать код"
+  >
+    <div class="hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4"></div>
+<div class="hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4"></div>
+  </button>
+</div>
+</div>
+<p><strong>Главный совет</strong>: Всегда начинайте с staging-среды, убедитесь, что всё работает, и только потом переключайтесь на боевой сервер Let&rsquo;s Encrypt, заменив caServer на стандартный или просто удалив эту строку.</p>
+<p>Помните — большинство проблем решаются внимательной проверкой конфигурации и использованием staging-среды для отладки!</p>
+<h2>Заключение<span class="hx:absolute hx:-mt-20" id="заключение"></span>
+    <a href="#%d0%b7%d0%b0%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Некоторое время назад протокол HTTPS считался дорогой роскошью, доступной только крупным компаниям с серьёзным бюджетом. Сегодня это не просто рекомендация, а стандарт безопасности в интернете — такой же обязательный, как замок на вашей входной двери или антивирус на компьютере. Благодаря инструментам вроде Traefik 3 и Let’s Encrypt защищённое соединение стало доступным каждому: это как иметь личную команду инженеров по безопасности, которые работают на вас круглосуточно — и при этом абсолютно бесплатно.</p>
+<p>Теперь у вас нет причин оставлять свои проекты без защиты. Открытые протоколы, уязвимые данные и риски перехвата информации остались в прошлом. Включайте HTTPS по умолчанию для каждого нового сайта, сервиса или API — это не просто хорошая практика, а необходимый минимум для современного интернета. Ваши пользователи заслуживают безопасности, а её обеспечение никогда не было таким простым.</p>
+
+        </div>
+        <div class="hx:mt-16"></div>
+        <div class="hx:mb-8 hx:flex hx:items-center hx:border-t hx:pt-8 hx:border-gray-200 hx:dark:border-neutral-800 hx:contrast-more:border-neutral-400 hx:dark:contrast-more:border-neutral-400 hx:print:hidden"><a
+        href="/traefik/traefik2/"
+        title="2. Middleware и безопасность"
+        class="hx:flex hx:max-w-[50%] hx:items-center hx:gap-1 hx:py-4 hx:text-base hx:font-medium hx:text-gray-600 hx:transition-colors [word-break:break-word] hx:hover:text-primary-600 hx:dark:text-gray-300 hx:md:text-lg hx:ltr:pr-4 hx:rtl:pl-4"
+      ><svg class="hx:inline hx:h-5 hx:shrink-0 hx:ltr:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>2. Middleware и безопасность</a><a
+        href="/traefik/traefik4/"
+        title="4. Мониторинг и метрики"
+        class="hx:flex hx:max-w-[50%] hx:items-center hx:gap-1 hx:py-4 hx:text-base hx:font-medium hx:text-gray-600 hx:transition-colors [word-break:break-word] hx:hover:text-primary-600 hx:dark:text-gray-300 hx:md:text-lg hx:ltr:ml-auto hx:ltr:pl-4 hx:ltr:text-right hx:rtl:mr-auto hx:rtl:pr-4 hx:rtl:text-left"
+      >4. Мониторинг и метрики<svg class="hx:inline hx:h-5 hx:shrink-0 hx:rtl:-rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></a></div>
+        
+      </main>
+    </article>
+  </div>
+
+      <footer class="hextra-footer hx:bg-gray-100 hx:pb-[env(safe-area-inset-bottom)] hx:dark:bg-neutral-900 hx:print:bg-transparent"><div class="hextra-custom-footer hextra-max-footer-width hx:pl-[max(env(safe-area-inset-left),1.5rem)] hx:pr-[max(env(safe-area-inset-right),1.5rem)] hx:text-gray-600 hx:dark:text-gray-400"></div><div
+      class="hextra-max-footer-width hx:mx-auto hx:flex hx:justify-center hx:py-12 hx:pl-[max(env(safe-area-inset-left),1.5rem)] hx:pr-[max(env(safe-area-inset-right),1.5rem)] hx:text-gray-600 hx:dark:text-gray-400 hx:md:justify-start"
+    >
+      <div class="hx:flex hx:w-full hx:flex-col hx:items-center hx:sm:items-start"><div class="hx:font-semibold">При поддержке GitHub, HUGO, Hextra</div><div class="hx:mt-6 hx:text-xs">2025 Короткие заметки о технологиях и IT</div></div>
+    </div></footer>
+
+    
+    <script defer src="/js/main.js" integrity=""></script>
+<script defer src="/js/flexsearch.9f5b5908f93ae86f1ecd4b043b799f580c2d1654e703dd9357d568ac41b2547a.js" integrity="sha256-n1tZCPk66G8ezUsEO3mfWAwtFlTnA92TV9VorEGyVHo=" crossorigin="anonymous"></script>
+        <script defer src="/ru.search.js" integrity=""></script>
+  </body>
+</html>

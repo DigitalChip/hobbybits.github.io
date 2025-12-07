@@ -1,0 +1,382 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Короткие заметки о технологиях и IT – Nginx</title>
+    <link>http://localhost:1313/tags/nginx/</link>
+    <description>Recent content in Nginx on Короткие заметки о технологиях и IT</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru-ru</language>
+    
+	  <atom:link href="http://localhost:1313/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>1. Nginx - Анатомия конфигурации Nginx</title>
+      <link>http://localhost:1313/nginx/nginx1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/nginx/nginx1/</guid>
+      <description>
+        
+        
+        &lt;h1&gt;Анатомия конфигурации Nginx: от структуры к логике принятия решений&lt;/h1&gt;&lt;h2&gt;Конфигурация как система правил&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;конфигурация-как-система-правил&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#%d0%ba%d0%be%d0%bd%d1%84%d0%b8%d0%b3%d1%83%d1%80%d0%b0%d1%86%d0%b8%d1%8f-%d0%ba%d0%b0%d0%ba-%d1%81%d0%b8%d1%81%d1%82%d0%b5%d0%bc%d0%b0-%d0%bf%d1%80%d0%b0%d0%b2%d0%b8%d0%bb&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;Nginx — высокопроизводительный веб-сервер и обратный прокси. Его мощь и гибкость проявляются не через графический интерфейс, а через текстовые конфигурационные файлы. Чтобы эффективно им управлять, необходимо понимать не просто синтаксис, а принципы, по которым Nginx интерпретирует эти файлы. Поэтому, давайте разберем базовые элементы конфигурации, их иерархию и логику, по которой Nginx выбирает, как обработать входящий запрос.&lt;/p&gt;
+&lt;h2&gt;1. Базовые элементы: Директивы и контексты&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;1-базовые-элементы-директивы-и-контексты&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#1-%d0%b1%d0%b0%d0%b7%d0%be%d0%b2%d1%8b%d0%b5-%d1%8d%d0%bb%d0%b5%d0%bc%d0%b5%d0%bd%d1%82%d1%8b-%d0%b4%d0%b8%d1%80%d0%b5%d0%ba%d1%82%d0%b8%d0%b2%d1%8b-%d0%b8-%d0%ba%d0%be%d0%bd%d1%82%d0%b5%d0%ba%d1%81%d1%82%d1%8b&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;Конфигурация Nginx построена на двух основных понятиях: директивы и контексты.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Директива&lt;/strong&gt; — это конкретная инструкция. Она имеет имя и параметры и завершается точкой с запятой (;).&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;worker_processes auto;&lt;/code&gt; — директива &lt;code&gt;worker_processes&lt;/code&gt; с параметром &lt;code&gt;auto&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;error_log /var/log/nginx/error.log warn;&lt;/code&gt; — директива &lt;code&gt;error_log&lt;/code&gt; с двумя параметрами.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Контекст&lt;/strong&gt; — это блок, ограниченный фигурными скобками &lt;code&gt;{&lt;/code&gt; и &lt;code&gt;}&lt;/code&gt;, который группирует директивы и определяет область их действия. Контексты могут быть вложенными.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http { ... }&lt;/code&gt; — контекст уровня HTTP.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;server { ... }&lt;/code&gt; — контекст виртуального хоста, вложенный в http.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;location /api { ... }&lt;/code&gt; — контекст для определенного URI, вложенный в &lt;code&gt;server&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Ключевой принцип: Директивы, объявленные в вышележащем (родительском) контексте, обычно наследуются вложенными контекстами, если они явно не переопределены. Это формирует древовидную структуру конфигурации.&lt;/p&gt;
+&lt;h2&gt;2. Иерархия контекстов: от общего к частному&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;2-иерархия-контекстов-от-общего-к-частному&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#2-%d0%b8%d0%b5%d1%80%d0%b0%d1%80%d1%85%d0%b8%d1%8f-%d0%ba%d0%be%d0%bd%d1%82%d0%b5%d0%ba%d1%81%d1%82%d0%be%d0%b2-%d0%be%d1%82-%d0%be%d0%b1%d1%89%d0%b5%d0%b3%d0%be-%d0%ba-%d1%87%d0%b0%d1%81%d1%82%d0%bd%d0%be%d0%bc%d1%83&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;Рассмотрим основные контексты в порядке их вложенности и ответственности.&lt;/p&gt;
+&lt;h3&gt;Главный контекст (Main Context)&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;главный-контекст-main-context&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#%d0%b3%d0%bb%d0%b0%d0%b2%d0%bd%d1%8b%d0%b9-%d0%ba%d0%be%d0%bd%d1%82%d0%b5%d0%ba%d1%81%d1%82-main-context&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;Это корневой уровень основного файла конфигурации (обычно &lt;code&gt;nginx.conf&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Здесь задаются глобальные параметры, влияющие на работу Nginx в целом: пользователь и группа (user), количество рабочих процессов (worker_processes), настройка обработки событий ОС (events), расположение файла с PID и так далее.&lt;/p&gt;
+&lt;p&gt;Сюда же подключаются другие конфигурационные файлы с помощью директивы &lt;code&gt;include&lt;/code&gt;.&lt;/p&gt;
+&lt;h3&gt;Контекст http&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;контекст-http&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#%d0%ba%d0%be%d0%bd%d1%82%d0%b5%d0%ba%d1%81%d1%82-http&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;Объявляется директивой &lt;code&gt;http { ... }&lt;/code&gt; внутри главного контекста.&lt;/p&gt;
+&lt;p&gt;Всё, что связано с обработкой HTTP- и HTTPS-трафика, описывается здесь.&lt;/p&gt;
+&lt;p&gt;Здесь задаются настройки по умолчанию для всех нижележащих виртуальных серверов: MIME-типы (&lt;code&gt;include mime.types;&lt;/code&gt;), логи доступа (&lt;code&gt;access_log&lt;/code&gt;), таймауты, настройки сжатия (&lt;code&gt;gzip&lt;/code&gt;), подключение внешних файлов конфигураций (например, &lt;code&gt;include /etc/nginx/conf.d/*.conf;&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Внутри &lt;code&gt;http&lt;/code&gt; определяются один или несколько контекстов &lt;code&gt;server&lt;/code&gt;.&lt;/p&gt;
+&lt;h3&gt;Контекст server&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;контекст-server&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#%d0%ba%d0%be%d0%bd%d1%82%d0%b5%d0%ba%d1%81%d1%82-server&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;Это определение виртуального хоста (Virtual Host). Он позволяет Nginx обслуживать множество независимых сайтов (доменов) на одном IP-адресе.&lt;/p&gt;
+&lt;p&gt;Выбор конкретного контекста server для обработки входящего запроса определяется двумя ключевыми директивами внутри него:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;listen&lt;/code&gt; — определяет IP-адрес и порт, которые сервер будет слушать (например, &lt;code&gt;listen 80;&lt;/code&gt;, &lt;code&gt;listen 443 ssl;&lt;/code&gt;, &lt;code&gt;listen 10.0.0.1:8080;&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;server_name&lt;/code&gt; — сопоставляет доменное имя из заголовка &lt;code&gt;Host&lt;/code&gt; HTTP-запроса. Может содержать точные имена (&lt;code&gt;example.com&lt;/code&gt;), wildcard-маски (&lt;code&gt;*.example.com&lt;/code&gt;), или даже регулярные выражения (с префиксом &lt;code&gt;~&lt;/code&gt;).&lt;/p&gt;
+&lt;h4&gt;Алгоритм выбора server-блока:&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;алгоритм-выбора-server-блока&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#%d0%b0%d0%bb%d0%b3%d0%be%d1%80%d0%b8%d1%82%d0%bc-%d0%b2%d1%8b%d0%b1%d0%be%d1%80%d0%b0-server-%d0%b1%d0%bb%d0%be%d0%ba%d0%b0&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h4&gt;&lt;p&gt;Nginx ищет все блоки &lt;code&gt;server&lt;/code&gt;, чья директива &lt;code&gt;listen&lt;/code&gt; соответствует IP и порту запроса.&lt;/p&gt;
+&lt;p&gt;Среди них он ищет блок с точным совпадением &lt;code&gt;server_name&lt;/code&gt; с заголовком &lt;code&gt;Host&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Если точного совпадения нет, ищет блок с wildcard-именем, соответствующим запросу (например, &lt;code&gt;*.example.com&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Если и его нет, выбирает блок, соответствующий регулярному выражению (если есть).&lt;/p&gt;
+&lt;p&gt;Если ничего не найдено, используется блок server по умолчанию для данного порта: это либо блок с директивой &lt;code&gt;listen ... default_server;&lt;/code&gt;, либо первый блок &lt;code&gt;server&lt;/code&gt;, объявленный для этого порта.&lt;/p&gt;
+&lt;p&gt;Внутри &lt;code&gt;server&lt;/code&gt; определяются контексты &lt;code&gt;location&lt;/code&gt;.&lt;/p&gt;
+&lt;h3&gt;Контекст location&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;контекст-location&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#%d0%ba%d0%be%d0%bd%d1%82%d0%b5%d0%ba%d1%81%d1%82-location&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;Это самый важный инструмент для маршрутизации запросов внутри виртуального хоста.&lt;/p&gt;
+&lt;p&gt;Он определяет, как обрабатывать запросы к определенным URI (путям).&lt;/p&gt;
+&lt;p&gt;Синтаксис: &lt;code&gt;location [модификатор] URI-шаблон { ... }&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Модификаторы определяют тип сопоставления:&lt;/p&gt;
+&lt;p&gt;(без модификатора) или &lt;code&gt;=&lt;/code&gt; — Префиксное совпадение. &lt;code&gt;location /api/&lt;/code&gt; соответствует &lt;code&gt;/api/&lt;/code&gt;, &lt;code&gt;/api/users&lt;/code&gt;, &lt;code&gt;/api/v1/&lt;/code&gt;. &lt;code&gt;location = /api/&lt;/code&gt; — только точное совпадение с &lt;code&gt;/api/&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;~&lt;/code&gt; и &lt;code&gt;~*&lt;/code&gt; — Совпадение по регулярному выражению (регистрозависимое и регистронезависимое соответственно). &lt;code&gt;location ~ \.(jpg|png|gif)$&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;^~&lt;/code&gt; — Префиксное совпадение с наивысшим приоритетом среди префиксных. Отменяет проверку регулярных выражений для данного совпадения.&lt;/p&gt;
+&lt;h4&gt;Алгоритм выбора location блока (упрощенно):&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;алгоритм-выбора-location-блока-упрощенно&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#%d0%b0%d0%bb%d0%b3%d0%be%d1%80%d0%b8%d1%82%d0%bc-%d0%b2%d1%8b%d0%b1%d0%be%d1%80%d0%b0-location-%d0%b1%d0%bb%d0%be%d0%ba%d0%b0-%d1%83%d0%bf%d1%80%d0%be%d1%89%d0%b5%d0%bd%d0%bd%d0%be&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h4&gt;&lt;p&gt;Nginx сканирует все префиксные (без регулярных выражений) location.&lt;/p&gt;
+&lt;p&gt;Запоминает самый длинный совпадающий префикс.&lt;/p&gt;
+&lt;p&gt;Затем проверяет location с регулярными выражениями в порядке их объявления в конфигурации.&lt;/p&gt;
+&lt;p&gt;При первом совпадении с регулярным выражением — этот location используется, и поиск прекращается.&lt;/p&gt;
+&lt;p&gt;Если совпадений с регулярными выражениями не было, используется самый длинный префиксный location.&lt;/p&gt;
+&lt;p&gt;Модификаторы &lt;code&gt;=&lt;/code&gt; и &lt;code&gt;^~&lt;/code&gt; меняют этот алгоритм, давая соответствующим блокам наивысший приоритет.&lt;/p&gt;
+&lt;h2&gt;3. Практический пример: Два сайта на одном сервере&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;3-практический-пример-два-сайта-на-одном-сервере&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#3-%d0%bf%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%b9-%d0%bf%d1%80%d0%b8%d0%bc%d0%b5%d1%80-%d0%b4%d0%b2%d0%b0-%d1%81%d0%b0%d0%b9%d1%82%d0%b0-%d0%bd%d0%b0-%d0%be%d0%b4%d0%bd%d0%be%d0%bc-%d1%81%d0%b5%d1%80%d0%b2%d0%b5%d1%80%d0%b5&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;Рассмотрим фрагмент конфигурации внутри блока &lt;code&gt;http&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code&#34;&gt;
+
+&lt;div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nginx&#34; data-lang=&#34;nginx&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Виртуальный хост для сайта example.com
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;server&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;listen&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;server_name&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;example.com&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;www.example.com&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;location&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;root&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/var/www/example.com/html&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;index&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;index.html&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;location&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/static/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;alias&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/var/www/example.com/static/&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;expires&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;30d&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Виртуальный хост для блога blog.example.com
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;server&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;listen&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;server_name&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;blog.example.com&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;location&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;proxy_pass&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;http://127.0.0.1:8080&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;# Передача запроса бэкенду
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;proxy_set_header&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;Host&lt;/span&gt; $host;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Сервер по умолчанию для порта 80 - обработает запросы с неизвестным Host или без него
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;server&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;listen&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;default_server&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;server_name&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;_&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;# Специальное значение, явно указывающее на &amp;#34;любое другое имя&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;444&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;# Закрывает соединение без ответа (Nginx-specific код)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&#34;hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0&#34;&gt;
+  &lt;button
+    class=&#34;hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50&#34;
+    title=&#34;Скопировать код&#34;
+  &gt;
+    &lt;div class=&#34;hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+&lt;div class=&#34;hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+  &lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h3&gt;Как это работает&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;как-это-работает&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#%d0%ba%d0%b0%d0%ba-%d1%8d%d1%82%d0%be-%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%b0%d0%b5%d1%82&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Запрос &lt;code&gt;GET /static/logo.png HTTP/1.1&lt;/code&gt; с заголовком &lt;code&gt;Host: example.com&lt;/code&gt; приходит на порт &lt;code&gt;80&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Nginx находит все блоки server с &lt;code&gt;listen 80&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Сравнивает &lt;code&gt;Host: example.com&lt;/code&gt; с &lt;code&gt;server_name&lt;/code&gt; в найденных блоках. Выбирает первый блок, где есть точное совпадение (&lt;code&gt;example.com&lt;/code&gt;).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Внутри выбранного блока &lt;code&gt;server&lt;/code&gt; ищет подходящий &lt;code&gt;location&lt;/code&gt;. Путь &lt;code&gt;/static/logo.png&lt;/code&gt; совпадает с префиксным шаблоном &lt;code&gt;/static/&lt;/code&gt;. Самый длинный префикс — &lt;code&gt;/static/&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Проверяет &lt;code&gt;location&lt;/code&gt; с регулярными выражениями. В данном примере их нет.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Применяет правила из &lt;code&gt;location /static/&lt;/code&gt;: использует &lt;code&gt;alias&lt;/code&gt; для отдачи файла &lt;code&gt;/var/www/example.com/static/logo.png&lt;/code&gt; и устанавливает заголовок &lt;code&gt;Cache-Control&lt;/code&gt; на 30 дней.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Заключение и следующий шаг&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;заключение-и-следующий-шаг&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#%d0%b7%d0%b0%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-%d0%b8-%d1%81%d0%bb%d0%b5%d0%b4%d1%83%d1%8e%d1%89%d0%b8%d0%b9-%d1%88%d0%b0%d0%b3&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;Понимание иерархии контекстов (main -&amp;gt; http -&amp;gt; server -&amp;gt; location) и алгоритмов выбора нужного блока — это 80% успеха в управлении Nginx. В следующей статье мы детально разберем контекст &lt;code&gt;location&lt;/code&gt; — основной инструмент для определения логики обработки запросов. Мы рассмотрим разницу между &lt;code&gt;root&lt;/code&gt; и &lt;code&gt;alias&lt;/code&gt;, изучим директивы для работы с индексными файлами, переопределения ошибок и, что наиболее важно, принципы проксирования запросов к бэкенд-приложениям с помощью &lt;code&gt;proxy_pass&lt;/code&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>2. Location: Мастер маршрутизации запросов</title>
+      <link>http://localhost:1313/nginx/nginx2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/nginx/nginx2/</guid>
+      <description>
+        
+        
+        &lt;h1&gt;Location: Мастер маршрутизации запросов в Nginx. От статики до проксирования&lt;/h1&gt;&lt;h2&gt;Сердце виртуального хоста&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;сердце-виртуального-хоста&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#%d1%81%d0%b5%d1%80%d0%b4%d1%86%d0%b5-%d0%b2%d0%b8%d1%80%d1%82%d1%83%d0%b0%d0%bb%d1%8c%d0%bd%d0%be%d0%b3%d0%be-%d1%85%d0%be%d1%81%d1%82%d0%b0&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;В &lt;a href=&#34;http://localhost:1313/nginx/nginx1/&#34;&gt;предыдущей статье&lt;/a&gt; мы разобрали иерархию: как Nginx выбирает нужный виртуальный хост (server) на основе порта и имени. Но что происходит после? Как решить, отдать ли статический файл, передать запрос приложению на Python или Nodejs, или вернуть редирект?&lt;/p&gt;
+&lt;p&gt;За это отвечает контекст &lt;code&gt;location&lt;/code&gt;. Это самый важный и гибкий инструмент внутри блока &lt;code&gt;server&lt;/code&gt;. Фактически, &lt;code&gt;location&lt;/code&gt; — это набор правил обработки для конкретных путей (URI) вашего сайта. Понимание его работы — ключ к тонкой настройке поведения любого веб-проекта.&lt;/p&gt;
+&lt;h2&gt;1. Анатомия директивы location. Модификаторы и приоритеты&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;1-анатомия-директивы-location-модификаторы-и-приоритеты&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#1-%d0%b0%d0%bd%d0%b0%d1%82%d0%be%d0%bc%d0%b8%d1%8f-%d0%b4%d0%b8%d1%80%d0%b5%d0%ba%d1%82%d0%b8%d0%b2%d1%8b-location-%d0%bc%d0%be%d0%b4%d0%b8%d1%84%d0%b8%d0%ba%d0%b0%d1%82%d0%be%d1%80%d1%8b-%d0%b8-%d0%bf%d1%80%d0%b8%d0%be%d1%80%d0%b8%d1%82%d0%b5%d1%82%d1%8b&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;Синтаксис блока выглядит так: &lt;code&gt;location [модификатор] URI-шаблон { ... }&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Модификатор определяет, как будет сравниваться URI запроса с шаблоном. От него кардинально зависит логика выбора.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;location = /точный/путь&lt;/code&gt; (Точное совпадение)&lt;/p&gt;
+&lt;p&gt;Срабатывает только при полном, byte-to-byte совпадении URI.&lt;/p&gt;
+&lt;p&gt;Приоритет: наивысший. Если запрос ему соответствует, этот блок будет выбран мгновенно, без дальнейших проверок других location.&lt;/p&gt;
+&lt;p&gt;Идеально для: часто запрашиваемых конкретных страниц (главная, robots.txt, favicon.ico), где нужно минимизировать накладные расходы.&lt;/p&gt;
+&lt;div class=&#34;hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code&#34;&gt;
+
+&lt;div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nginx&#34; data-lang=&#34;nginx&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;location&lt;/span&gt; = &lt;span style=&#34;color:#e6db74&#34;&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;root&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/var/www/site&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;index&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;index.html&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&#34;hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0&#34;&gt;
+  &lt;button
+    class=&#34;hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50&#34;
+    title=&#34;Скопировать код&#34;
+  &gt;
+    &lt;div class=&#34;hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+&lt;div class=&#34;hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+  &lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;location ^~ /префикс/&lt;/code&gt; (Приоритетное префиксное совпадение)&lt;/p&gt;
+&lt;p&gt;Срабатывает для всех URI, начинающихся с указанной строки.&lt;/p&gt;
+&lt;p&gt;Приоритет: очень высокий. Если запрос совпадает с таким &lt;code&gt;location&lt;/code&gt;, имеющим самый длинный из совпадающих префиксов, Nginx прекращает поиск по регулярным выражениям и использует его.&lt;/p&gt;
+&lt;p&gt;Идеально для: служебных путей, где важна скорость (&lt;code&gt;/admin/&lt;/code&gt;, &lt;code&gt;/api/&lt;/code&gt;) и нужно избежать проверки regexp.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;location ~ паттерн&lt;/code&gt; (Регулярное выражение, регистрозависимое)
+&lt;code&gt;location ~* паттерн&lt;/code&gt; (Регулярное выражение, регистронезависимое)&lt;/p&gt;
+&lt;p&gt;Срабатывает, если URI соответствует указанному регулярному выражению Perl-совместимого синтаксиса (PCRE).&lt;/p&gt;
+&lt;p&gt;Приоритет: средний. Проверяются последовательно, в порядке объявления в конфигурации. Первое совпадение — побеждает.&lt;/p&gt;
+&lt;p&gt;Идеально для: сложных правил, например, обработка всех графических файлов или скриптов определенных расширений.&lt;/p&gt;
+&lt;div class=&#34;hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code&#34;&gt;
+
+&lt;div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nginx&#34; data-lang=&#34;nginx&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;location&lt;/span&gt; ~ &lt;span style=&#34;color:#e6db74&#34;&gt;\.(jpg|jpeg|png|gif|ico)$&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;root&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/var/www/media&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;expires&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;1y&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;add_header&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;Cache-Control&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;public,&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;immutable&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;location&lt;/span&gt; ~&lt;span style=&#34;color:#e6db74&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;\.(php|php5|phtml)&lt;/span&gt;$ {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;deny&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;all&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;# Запрет доступа к исходникам PHP
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&#34;hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0&#34;&gt;
+  &lt;button
+    class=&#34;hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50&#34;
+    title=&#34;Скопировать код&#34;
+  &gt;
+    &lt;div class=&#34;hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+&lt;div class=&#34;hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+  &lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;location /префикс/&lt;/code&gt; (Обычное префиксное совпадение, БЕЗ модификатора)&lt;/p&gt;
+&lt;p&gt;Срабатывает для всех URI, начинающихся с указанной строки.&lt;/p&gt;
+&lt;p&gt;Приоритет: низший среди префиксных. Используется по умолчанию, если не сработали более приоритетные правила (=, ^~) и ни одно регулярное выражение.&lt;/p&gt;
+&lt;p&gt;Идеально для: базовых правил для разделов сайта (/blog/, /catalog/).&lt;/p&gt;
+&lt;p&gt;Важно: Модификаторы = и ^~ имеют более высокий приоритет, чем регулярные выражения. Это позволяет защитить критические или высоконагруженные пути от более медленной проверки regexp.&lt;/p&gt;
+&lt;h2&gt;2. Алгоритм выбора location: пошаговый разбор&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;2-алгоритм-выбора-location-пошаговый-разбор&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#2-%d0%b0%d0%bb%d0%b3%d0%be%d1%80%d0%b8%d1%82%d0%bc-%d0%b2%d1%8b%d0%b1%d0%be%d1%80%d0%b0-location-%d0%bf%d0%be%d1%88%d0%b0%d0%b3%d0%be%d0%b2%d1%8b%d0%b9-%d1%80%d0%b0%d0%b7%d0%b1%d0%be%d1%80&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;Когда Nginx получает запрос и определил нужный блок server, он действует так:&lt;/p&gt;
+&lt;p&gt;Проверяет все location с модификатором =. При точном совпадении — выбор завершен.&lt;/p&gt;
+&lt;p&gt;Находит самый длинный совпадающий префиксный location (с ^~ или без модификатора). Запоминает его.&lt;/p&gt;
+&lt;p&gt;Проверяет location с регулярными выражениями (~ и ~*) в том порядке, в котором они указаны в конфигурационном файле.&lt;/p&gt;
+&lt;p&gt;Если найдено совпадающее регулярное выражение — выбор падает на него, и поиск прекращается.&lt;/p&gt;
+&lt;p&gt;Если совпадений с regexp нет — используется тот самый длинный префиксный location, который был найден на шаге 2.&lt;/p&gt;
+&lt;p&gt;Специальный случай: Если самый длинный префиксный location имеет модификатор ^~ — шаг 3 (проверка regexp) пропускается, и используется сразу этот префиксный блок.&lt;/p&gt;
+&lt;p&gt;Простая мнемоника: Сначала =, потом самый длинный префикс, потом regexp по порядку, но ^~ может &amp;ldquo;перепрыгнуть&amp;rdquo; проверку regexp.&lt;/p&gt;
+&lt;h2&gt;3. Практика: Директивы для работы с контентом&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;3-практика-директивы-для-работы-с-контентом&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#3-%d0%bf%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0-%d0%b4%d0%b8%d1%80%d0%b5%d0%ba%d1%82%d0%b8%d0%b2%d1%8b-%d0%b4%d0%bb%d1%8f-%d1%80%d0%b0%d0%b1%d0%be%d1%82%d1%8b-%d1%81-%d0%ba%d0%be%d0%bd%d1%82%d0%b5%d0%bd%d1%82%d0%be%d0%bc&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;Внутри location вы определяете, что делать с запросом. Вот ключевые директивы:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;root&lt;/code&gt; — задает базовый каталог для поиска файлов. Итоговый путь к файлу формируется как &lt;code&gt;root&lt;/code&gt; + &lt;code&gt;URI&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code&#34;&gt;
+
+&lt;div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nginx&#34; data-lang=&#34;nginx&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;location&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/static/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;root&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/var/www/site&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;# Для запроса /static/logo.png Nginx будет искать /var/www/site/static/logo.png
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&#34;hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0&#34;&gt;
+  &lt;button
+    class=&#34;hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50&#34;
+    title=&#34;Скопировать код&#34;
+  &gt;
+    &lt;div class=&#34;hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+&lt;div class=&#34;hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+  &lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;alias&lt;/code&gt; — задает путь-замену для указанного &lt;code&gt;location&lt;/code&gt;. URI, соответствующий части &lt;code&gt;location&lt;/code&gt;, заменяется на значение &lt;code&gt;alias&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code&#34;&gt;
+
+&lt;div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nginx&#34; data-lang=&#34;nginx&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;location&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/uploads/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;alias&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/var/data/media/&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;# Для запроса /uploads/photo.jpg Nginx будет искать /var/data/media/photo.jpg
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# Обратите внимание на слэш! Его наличие важно для согласованности путей.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&#34;hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0&#34;&gt;
+  &lt;button
+    class=&#34;hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50&#34;
+    title=&#34;Скопировать код&#34;
+  &gt;
+    &lt;div class=&#34;hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+&lt;div class=&#34;hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+  &lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Ключевое отличие: &lt;code&gt;root&lt;/code&gt; добавляет &lt;code&gt;URI&lt;/code&gt; к пути, &lt;code&gt;alias&lt;/code&gt; заменяет часть &lt;code&gt;URI&lt;/code&gt;, совпавшую с &lt;code&gt;location&lt;/code&gt;, на указанный путь.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;try_files&lt;/code&gt; — мощная директива для создания цепочки проверок.&lt;/p&gt;
+&lt;p&gt;По очереди проверяет существование файлов или директорий по заданным путям.&lt;/p&gt;
+&lt;p&gt;Последний параметр может быть именем location (с префиксом &lt;code&gt;=&lt;/code&gt;), на который произойдет внутреннее перенаправление, или кодом ошибки.&lt;/p&gt;
+&lt;div class=&#34;hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code&#34;&gt;
+
+&lt;div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nginx&#34; data-lang=&#34;nginx&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;location&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# Сначала попробовать отдать файл по точному URI, потом директорию /index.html, если ничего не найдено - отдать на обработку бэкенду.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;try_files&lt;/span&gt; $uri $uri/ &lt;span style=&#34;color:#e6db74&#34;&gt;/index.php?&lt;/span&gt;$query_string;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;location&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/assets/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# Попробовать отдать файл, если его нет - вернуть 404.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;try_files&lt;/span&gt; $uri =&lt;span style=&#34;color:#ae81ff&#34;&gt;404&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&#34;hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0&#34;&gt;
+  &lt;button
+    class=&#34;hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50&#34;
+    title=&#34;Скопировать код&#34;
+  &gt;
+    &lt;div class=&#34;hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+&lt;div class=&#34;hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+  &lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;proxy_pass&lt;/code&gt; — директива для проксирования (передачи) запроса другому серверу (бэкенду).&lt;/p&gt;
+&lt;div class=&#34;hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code&#34;&gt;
+
+&lt;div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nginx&#34; data-lang=&#34;nginx&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;location&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/api/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# Передает запрос приложению, работающему на localhost:3000
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;proxy_pass&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;http://127.0.0.1:3000&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;proxy_set_header&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;Host&lt;/span&gt; $host; &lt;span style=&#34;color:#75715e&#34;&gt;# Важно: передавать оригинальный заголовок Host
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;proxy_set_header&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;X-Real-IP&lt;/span&gt; $remote_addr; &lt;span style=&#34;color:#75715e&#34;&gt;# Передавать реальный IP клиента
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&#34;hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0&#34;&gt;
+  &lt;button
+    class=&#34;hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50&#34;
+    title=&#34;Скопировать код&#34;
+  &gt;
+    &lt;div class=&#34;hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+&lt;div class=&#34;hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+  &lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h2&gt;4. Собираем всё вместе: Пример сложной конфигурации&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;4-собираем-всё-вместе-пример-сложной-конфигурации&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#4-%d1%81%d0%be%d0%b1%d0%b8%d1%80%d0%b0%d0%b5%d0%bc-%d0%b2%d1%81%d1%91-%d0%b2%d0%bc%d0%b5%d1%81%d1%82%d0%b5-%d0%bf%d1%80%d0%b8%d0%bc%d0%b5%d1%80-%d1%81%d0%bb%d0%be%d0%b6%d0%bd%d0%be%d0%b9-%d0%ba%d0%be%d0%bd%d1%84%d0%b8%d0%b3%d1%83%d1%80%d0%b0%d1%86%d0%b8%d0%b8&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;Рассмотрим server для условного сайта с админкой, API и статикой.&lt;/p&gt;
+&lt;div class=&#34;hextra-code-block hx:relative hx:mt-6 hx:first:mt-0 hx:group/code&#34;&gt;
+
+&lt;div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nginx&#34; data-lang=&#34;nginx&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;server&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;listen&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;server_name&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;mysite.com&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# 1. Точное совпадение - главная страница (максимальная скорость)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;location&lt;/span&gt; = &lt;span style=&#34;color:#e6db74&#34;&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;root&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/var/www/mysite&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;index&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;index.html&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# 2. Приоритетный префикс для админки (защищаем от случайного regexp)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;location&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;^~&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/admin/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;# Проверка аутентификации может быть здесь
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;proxy_pass&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;http://localhost:8000&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# 3. Регулярное выражение для всех картинок и стилей
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;location&lt;/span&gt; ~&lt;span style=&#34;color:#e6db74&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;\.(css|js|jpg|png|svg)&lt;/span&gt;$ {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;root&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/var/www/mysite/static&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;expires&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;30d&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;# Кэширование в браузере на 30 дней
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;add_header&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;Cache-Control&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;public,&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;immutable&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# 4. Префикс для API
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;location&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/api/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;proxy_pass&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;http://localhost:3000/&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;# Обратите внимание на слэш в конце!
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;proxy_set_header&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;X-Forwarded-For&lt;/span&gt; $proxy_add_x_forwarded_for;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# 5. Общий fallback-блок для всех остальных запросов (например, для SPA)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;location&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;root&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;/var/www/mysite&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;try_files&lt;/span&gt; $uri $uri/ &lt;span style=&#34;color:#e6db74&#34;&gt;/index.html&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&#34;hextra-code-copy-btn-container hx:opacity-0 hx:transition hx:group-hover/code:opacity-100 hx:flex hx:gap-1 hx:absolute hx:m-[11px] hx:right-0 hx:top-0&#34;&gt;
+  &lt;button
+    class=&#34;hextra-code-copy-btn hx:group/copybtn hx:cursor-pointer hx:transition-all hx:active:opacity-50 hx:bg-primary-700/5 hx:border hx:border-black/5 hx:text-gray-600 hx:hover:text-gray-900 hx:rounded-md hx:p-1.5 hx:dark:bg-primary-300/10 hx:dark:border-white/10 hx:dark:text-gray-400 hx:dark:hover:text-gray-50&#34;
+    title=&#34;Скопировать код&#34;
+  &gt;
+    &lt;div class=&#34;hextra-copy-icon hx:group-[.copied]/copybtn:hidden hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+&lt;div class=&#34;hextra-success-icon hx:hidden hx:group-[.copied]/copybtn:block hx:pointer-events-none hx:h-4 hx:w-4&#34;&gt;&lt;/div&gt;
+  &lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Разбор логики для запроса &lt;code&gt;GET /api/v1/user&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;Пропускается &lt;code&gt;= /&lt;/code&gt; (нет точного совпадения).&lt;/p&gt;
+&lt;p&gt;Проверяется &lt;code&gt;^~ /admin/&lt;/code&gt; (не совпадает).&lt;/p&gt;
+&lt;p&gt;Проверяются regexp &lt;code&gt;~* \.(css|js|jpg|png|svg)$&lt;/code&gt; (не совпадает).&lt;/p&gt;
+&lt;p&gt;Находится префиксный &lt;code&gt;location /api/&lt;/code&gt; (совпадает!). Это самый длинный совпадающий префикс.&lt;/p&gt;
+&lt;p&gt;Дальнейшая проверка regexp не происходит, потому что есть совпадающий префикс, но у него нет модификатора &lt;code&gt;^~&lt;/code&gt;. Однако regexp уже проверены на шаге 3 и не сработали.&lt;/p&gt;
+&lt;p&gt;Запрос передается (&lt;code&gt;proxy_pass&lt;/code&gt;) бэкенду на &lt;code&gt;localhost:3000&lt;/code&gt;, при этом URI &lt;code&gt;/v1/user&lt;/code&gt; будет добавлен к указанному адресу (так как в &lt;code&gt;proxy_pass&lt;/code&gt; есть завершающий слэш).&lt;/p&gt;
+&lt;h2&gt;Заключение и следующий шаг&lt;span class=&#34;hx:absolute hx:-mt-20&#34; id=&#34;заключение-и-следующий-шаг&#34;&gt;&lt;/span&gt;
+    &lt;a href=&#34;#%d0%b7%d0%b0%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-%d0%b8-%d1%81%d0%bb%d0%b5%d0%b4%d1%83%d1%8e%d1%89%d0%b8%d0%b9-%d1%88%d0%b0%d0%b3&#34; class=&#34;subheading-anchor&#34; aria-label=&#34;Permalink for this section&#34;&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;Контекст &lt;code&gt;location&lt;/code&gt; — это инструмент декларативной маршрутизации. Вы не пишете процедурный код, а описываете условия (&lt;code&gt;=&lt;/code&gt;, &lt;code&gt;^~&lt;/code&gt;, &lt;code&gt;~&lt;/code&gt;, &lt;code&gt;префикс&lt;/code&gt;) и соответствующие им действия (&lt;code&gt;root&lt;/code&gt;, &lt;code&gt;proxy_pass&lt;/code&gt;, &lt;code&gt;try_files&lt;/code&gt;). Понимание приоритетов и тонкостей директив позволяет строить чистые, эффективные и предсказуемые конфигурации.&lt;/p&gt;
+&lt;p&gt;В следующей статье мы выведем взаимодействие с бэкендами на новый уровень, подробно разобрав директиву &lt;code&gt;proxy_pass&lt;/code&gt; и весь спектр сопутствующих настроек: от правильной передачи заголовков, управления таймаутами и буферизацией до балансировки нагрузки между несколькими серверами приложений. Это основа для работы с современными микросервисными архитектурами.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Nginx: коротко о главном</title>
+      <link>http://localhost:1313/nginx/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/nginx/</guid>
+      <description>
+        
+        
+        &lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/nginx/nginx-server.jpg&#34; alt=&#34;Nginx proxy server&#34;  loading=&#34;lazy&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;С годами мои конфигурации Nginx стали напоминать старый дом, где каждое новое требование — это пристройка из подручных материалов. Где-то криво работал кэш, в другом месте таинственным образом отваливались WebSocket&amp;rsquo;ы, а попытка добавить защитные заголовки превращалась в игру &amp;ldquo;найди, куда именно вставить эту директиву&amp;rdquo;. Я действовал методом копирования кусков конфигов с форумов, не особо задумываясь о том, что происходит внутри. Мне просто нужно было, чтобы всё «заработало».&lt;/p&gt;
+&lt;p&gt;Этот подход дал трещину, когда пришлось перенести на другой VPS, обновить и перенастроить Nextcloud, который проработал уже не один год. Я провел несколько бессонных дней и ночей, пытаясь совладать с этим! Это был какой-то кошмар! Работало то одно, то другое, то что то отваливалось. То работает, то нет&amp;hellip;&lt;/p&gt;
+&lt;p&gt;Понимание пришло горькое: чтобы двигаться дальше, нужно не искать очередной готовый кусок конфига и заниматься &amp;ldquo;копипастой&amp;rdquo;, а наконец-то разобраться, как эта система думает — с какой логикой, как она выбирает блок server, как обрабатывает location и что на самом деле делает try_files.&lt;/p&gt;
+&lt;p&gt;Собственно, &lt;a href=&#34;http://localhost:1313/nginx/nginx1/&#34;&gt;вот мои записки и шпаргалки&lt;/a&gt;&amp;hellip;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>
